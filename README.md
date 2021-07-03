@@ -1,2 +1,2 @@
 # ADOFAI-gg-Server
-Server of [ADOFAI.gg](https://adofai.gg)
+Server file of [ADOFAI.gg](https://adofai.gg)
