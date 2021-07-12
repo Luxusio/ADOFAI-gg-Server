@@ -1,6 +1,5 @@
 package gg.adofai.server.domain.entity.program;
 
-import gg.adofai.server.domain.entity.level.LevelCreator;
 import lombok.Getter;
 
 import javax.persistence.*;

@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;

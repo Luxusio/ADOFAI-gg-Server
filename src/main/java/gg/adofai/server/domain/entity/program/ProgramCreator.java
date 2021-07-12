@@ -1,11 +1,9 @@
 package gg.adofai.server.domain.entity.program;
 
-import gg.adofai.server.domain.entity.level.Level;
 import gg.adofai.server.domain.entity.member.Member;
 import lombok.Getter;
 
 import javax.persistence.*;
-import javax.swing.*;
 
 import static javax.persistence.FetchType.LAZY;
 

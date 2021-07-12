@@ -1,7 +1,6 @@
 package gg.adofai.server.domain.entity.level;
 
 import gg.adofai.server.domain.entity.member.Member;
-import gg.adofai.server.domain.entity.member.Person;
 import lombok.Getter;
 
 import javax.persistence.*;

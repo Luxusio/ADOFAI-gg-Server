@@ -1,13 +1,10 @@
 package gg.adofai.server.domain.entity.member.extra;
 
-import gg.adofai.server.domain.entity.level.Song;
 import gg.adofai.server.domain.entity.member.Member;
 import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
