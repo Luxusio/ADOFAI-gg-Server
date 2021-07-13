@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ForumService {
 
     private static final String BASE_URL = "https://spreadsheets.google.com";
@@ -27,15 +26,16 @@ public class ForumService {
     private static final String GID_ADMIN_PP_WORK = "110445676";
     private static final String GID_ADMIN_TAG = "346297182";
 
-    private final WebClient.Builder builder;
-    private final WebClient client = builder.baseUrl(BASE_URL).build();
+    private final WebClient client;
+
+    public ForumService(WebClient.Builder builder) {
+        client = builder.baseUrl(BASE_URL).build();
+    }
 
     public void updateLevelData() {
         List<ForumLevelDto> levelDtoList = getData(KEY_ADMIN, GID_ADMIN_LEVEL).stream()
                 .map(ForumLevelDto::createForumLevelDto)
                 .collect(Collectors.toList());
-
-
 
 
     }
@@ -46,7 +46,7 @@ public class ForumService {
                     .uri("tq?key=" + key + "&gid=" + gid)
                     .retrieve().bodyToMono(String.class)
                     .block();
-            if (result == null) throw new IOException("failed to get data");
+            if (result == null) throw new IOException("failed to get data (key=" + key + ", gid=" + gid + ")");
             result = GoogleSheetConverter.toSafeJsonString(result);
             return GoogleSheetConverter.toRowDataList(result);
         } catch (ParseException | IOException e) {
