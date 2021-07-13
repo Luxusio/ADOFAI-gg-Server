@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.util.StringUtils;
+import org.springframework.util.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static gg.adofai.server.service.forum.JsonConverter.safe;
 
 @Data @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ForumLevelDto {
@@ -36,18 +38,18 @@ public class ForumLevelDto {
         if (jsonArray.get(0) == null) return null;
 
         ForumLevelDto dto = new ForumLevelDto();
-        dto.id = get(jsonArray.get(0));
-        dto.song = get(jsonArray.get(1));
-        dto.artists = toStringList(get(jsonArray.get(2)));
+        dto.id = safe(jsonArray.get(0));
+        dto.song = safe(jsonArray.get(1));
+        dto.artists = toStringList(safe(jsonArray.get(2)));
         // localLevel = get(jsonArray.get(3), "v");
-        dto.creators = toStringList(get(jsonArray.get(4)));
+        dto.creators = toStringList(safe(jsonArray.get(4)));
         // download = get(jsonArray.get(5), "v");
         // video = get(jsonArray.get(6), "v");
         // workshop = get(jsonArray.get(7), "v");
-        String epilepsyWarningStr = get(jsonArray.get(8));
+        String epilepsyWarningStr = safe(jsonArray.get(8));
         dto.epilepsyWarning = epilepsyWarningStr == null ? null : !epilepsyWarningStr.equals("X");
 
-        String bpmString = get(jsonArray.get(9));
+        String bpmString = safe(jsonArray.get(9));
         if (bpmString != null) {
             int idx = bpmString.indexOf('-');
             if (idx != -1) {
@@ -64,55 +66,30 @@ public class ForumLevelDto {
             dto.maxBpm = null;
         }
 
-        dto.tiles = get(jsonArray.get(10));
+        dto.tiles = safe(jsonArray.get(10));
 
         dto.tags = Stream.of(
-                get(jsonArray.get(11)),
-                get(jsonArray.get(12)),
-                get(jsonArray.get(13)),
-                get(jsonArray.get(14)),
-                get(jsonArray.get(15)))
+                safe(jsonArray.get(11)),
+                safe(jsonArray.get(12)),
+                safe(jsonArray.get(13)),
+                safe(jsonArray.get(14)),
+                safe(jsonArray.get(15)))
                 .filter(Objects::nonNull)
                 .map(o-> (String) o)
                 .map(o-> o.charAt(0) == '#' ? o.substring(1) : o)
                 .collect(Collectors.toList());
 
-        dto.level = safeDouble(get(jsonArray.get(16)));
-        dto.download = get(jsonArray.get(17));
-        dto.workshop = get(jsonArray.get(18));
-        dto.video = get(jsonArray.get(19));
+        Number levelNumber = safe(jsonArray.get(16));
+        dto.level = levelNumber == null ? null : NumberUtils.convertNumberToTargetClass(levelNumber, Double.class);
+        dto.download = safe(jsonArray.get(17));
+        dto.workshop = safe(jsonArray.get(18));
+        dto.video = safe(jsonArray.get(19));
         //reserved = get(jsonArray.get(20));
         //discord = get(jsonArray.get(21));
 
         return dto;
     }
 
-    private static Double safeDouble(Object obj) {
-        if (obj instanceof Integer) {
-            return (double) (int) obj;
-        }
-        if (obj instanceof Long) {
-            return (double) (long) obj;
-        }
-        else if (obj instanceof Float) {
-            return (double) (float) obj;
-        }
-        else if (obj instanceof Double) {
-            return (double) obj;
-        }
-        else {
-            // TODO : use logger
-            System.err.println("obj is not number! obj = " + obj);
-            return null;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static<T> T get(Object obj) {
-        JSONObject jsonObject = (JSONObject) obj;
-        if (jsonObject == null) return null;
-        return (T) jsonObject.get("v");
-    }
 
     private static @NonNull List<String> toStringList(String text)  {
         if (text == null || text.isEmpty()) return List.of("");
