@@ -64,8 +64,7 @@ public class ForumLevelDto {
             dto.maxBpm = null;
         }
 
-        String tileStr = get(jsonArray.get(10));
-        dto.tiles = StringUtils.hasLength(tileStr) ? Long.parseLong(tileStr) : null;
+        dto.tiles = get(jsonArray.get(10));
 
         dto.tags = Stream.of(
                 get(jsonArray.get(11)),
@@ -73,26 +72,46 @@ public class ForumLevelDto {
                 get(jsonArray.get(13)),
                 get(jsonArray.get(14)),
                 get(jsonArray.get(15)))
-            .filter(Objects::nonNull)
-            .map(o-> (String) o)
-            .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .map(o-> (String) o)
+                .map(o-> o.charAt(0) == '#' ? o.substring(1) : o)
+                .collect(Collectors.toList());
 
-        dto.level = get(jsonArray.get(16));
+        dto.level = safeDouble(get(jsonArray.get(16)));
         dto.download = get(jsonArray.get(17));
         dto.workshop = get(jsonArray.get(18));
         dto.video = get(jsonArray.get(19));
-        dto.id = get(jsonArray.get(20));
-        dto.id = get(jsonArray.get(21));
+        //reserved = get(jsonArray.get(20));
+        //discord = get(jsonArray.get(21));
 
         return dto;
     }
 
+    private static Double safeDouble(Object obj) {
+        if (obj instanceof Integer) {
+            return (double) (int) obj;
+        }
+        if (obj instanceof Long) {
+            return (double) (long) obj;
+        }
+        else if (obj instanceof Float) {
+            return (double) (float) obj;
+        }
+        else if (obj instanceof Double) {
+            return (double) obj;
+        }
+        else {
+            // TODO : use logger
+            System.err.println("obj is not number! obj = " + obj);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     private static<T> T get(Object obj) {
         JSONObject jsonObject = (JSONObject) obj;
         if (jsonObject == null) return null;
-        jsonObject = (JSONObject) jsonObject.get("v");
-        if (jsonObject == null) return null;
-        return (T) jsonObject;
+        return (T) jsonObject.get("v");
     }
 
     private static @NonNull List<String> toStringList(String text)  {
