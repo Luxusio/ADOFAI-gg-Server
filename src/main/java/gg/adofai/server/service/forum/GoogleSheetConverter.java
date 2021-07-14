@@ -11,6 +11,7 @@ import java.util.List;
 public class GoogleSheetConverter {
 
     public static String toSafeJsonString(String str) {
+        if (str == null) return null;
         int from = str.indexOf('{');
         int to = str.lastIndexOf('}');
         if (from != -1 && to > from) {
