@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static gg.adofai.server.service.forum.JsonConverter.safe;
-
 public class PrimaryTypeConverter {
 
     public static @NonNull List<String> toStringList(String text)  {
