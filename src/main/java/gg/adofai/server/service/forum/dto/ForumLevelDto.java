@@ -3,19 +3,18 @@ package gg.adofai.server.service.forum.dto;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.util.NumberUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static gg.adofai.server.service.forum.JsonConverter.safe;
+import static gg.adofai.server.service.forum.PrimaryTypeConverter.safeDouble;
+import static gg.adofai.server.service.forum.PrimaryTypeConverter.toStringList;
 
 @Data @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ForumLevelDto {
@@ -79,8 +78,7 @@ public class ForumLevelDto {
                 .map(o-> o.charAt(0) == '#' ? o.substring(1) : o)
                 .collect(Collectors.toList());
 
-        Number levelNumber = safe(jsonArray.get(16));
-        dto.level = levelNumber == null ? null : NumberUtils.convertNumberToTargetClass(levelNumber, Double.class);
+        dto.level = safeDouble(safe(jsonArray.get(16)));
         dto.download = safe(jsonArray.get(17));
         dto.workshop = safe(jsonArray.get(18));
         dto.video = safe(jsonArray.get(19));
@@ -91,12 +89,6 @@ public class ForumLevelDto {
     }
 
 
-    private static @NonNull List<String> toStringList(String text)  {
-        if (text == null || text.isEmpty()) return List.of("");
-        return Arrays.stream(text.split("&"))
-                .map(String::trim)
-                .collect(Collectors.toList());
-    }
 
 
 }
