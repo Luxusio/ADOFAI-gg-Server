@@ -21,4 +21,8 @@ public class PrimaryTypeConverter {
                 NumberUtils.convertNumberToTargetClass(number, Double.class);
     }
 
+    public static <T> @NonNull T safeValue(T value, @NonNull T defaultValue) {
+        return value == null ? defaultValue : value;
+    }
+
 }
