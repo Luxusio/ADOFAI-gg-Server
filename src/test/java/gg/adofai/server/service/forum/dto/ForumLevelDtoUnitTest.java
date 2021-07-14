@@ -38,7 +38,7 @@ class ForumLevelDtoUnitTest {
     }
 
     @Test
-    void convertToNullTest() throws Exception {
+    void testNullConvert() throws Exception {
         // given
         String jsonStr_no28Empty = "[null,null,null,{\"v\":-2,\"f\":\"-2\"},null,null,{\"v\":\"X\"},null,null,null,null,null,null,null,null,null,{\"v\":-2,\"f\":\"-2\"},null,null,null,null,{\"v\":null}]";
         JSONArray arr = toJsonArray(jsonStr_no28Empty);

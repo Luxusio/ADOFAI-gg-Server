@@ -36,8 +36,6 @@ public class ForumService {
         List<ForumLevelDto> levelDtoList = getData(KEY_ADMIN, GID_ADMIN_LEVEL).stream()
                 .map(ForumLevelDto::createForumLevelDto)
                 .collect(Collectors.toList());
-
-
     }
 
     private List<JSONArray> getData(String key, String gid) {

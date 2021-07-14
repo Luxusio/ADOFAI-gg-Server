@@ -17,6 +17,7 @@ public class ForumTagDto {
 
         ForumTagDto dto = new ForumTagDto();
         dto.name = safe(jsonArray.get(1));
+        if (dto.name != null && dto.name.charAt(0) == '#') dto.name =  dto.name.substring(1);
 
         return dto;
     }
