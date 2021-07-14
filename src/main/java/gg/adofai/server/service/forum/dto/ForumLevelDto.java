@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static gg.adofai.server.service.forum.JsonConverter.safe;
-import static gg.adofai.server.service.forum.PrimaryTypeConverter.safeDouble;
-import static gg.adofai.server.service.forum.PrimaryTypeConverter.toStringList;
+import static gg.adofai.server.service.forum.PrimaryTypeConverter.*;
 
 @Data @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ForumLevelDto {
@@ -36,7 +35,7 @@ public class ForumLevelDto {
         if (jsonArray.get(0) == null) return null;
 
         ForumLevelDto dto = new ForumLevelDto();
-        dto.id = safe(jsonArray.get(0));
+        dto.id = safeLong(safe(jsonArray.get(0)));
         dto.song = safe(jsonArray.get(1));
         dto.artists = toStringList(safe(jsonArray.get(2)));
         // localLevel = get(jsonArray.get(3), "v");
@@ -64,7 +63,7 @@ public class ForumLevelDto {
             dto.maxBpm = null;
         }
 
-        dto.tiles = safe(jsonArray.get(10));
+        dto.tiles = safeLong(safe(jsonArray.get(10)));
 
         dto.tags = Stream.of(
                 safe(jsonArray.get(11)),

@@ -24,6 +24,10 @@ public class PrimaryTypeConverter {
         return safeNumber(number, Double.class);
     }
 
+    public static Long safeLong(Number number) {
+        return safeNumber(number, Long.class);
+    }
+
     public static Integer safeInteger(Number number) {
         return safeNumber(number, Integer.class);
     }
