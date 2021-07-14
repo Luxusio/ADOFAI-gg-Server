@@ -9,12 +9,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ForumServiceTest {
+class ForumServiceNetworkTest {
 
     @Test
     void testGetData() throws IOException {
         // given
-        ForumService forumService = new ForumService(
+        ForumService forumService = new ForumService(null, null,
                 null, null, null, null, null, WebClient.builder());
 
         // when
@@ -24,6 +24,7 @@ class ForumServiceTest {
         assertNotNull(forumTagDtoList);
         assertNotEquals(0, forumTagDtoList.size());
     }
+
 
 
 
