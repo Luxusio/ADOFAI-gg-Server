@@ -38,10 +38,9 @@ dependencies {
 	// test implementations
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	implementation 'systems.manifold:manifold-json-rt:2021.1.10'
-	implementation 'systems.manifold:manifold-props-rt:2021.1.10'
-	annotationProcessor 'systems.manifold:manifold-json:2021.1.10'
-	annotationProcessor 'systems.manifold:manifold-props:2021.1.10'
+	implementation 'systems.manifold:manifold-ext-rt:2021.1.14'
+	annotationProcessor 'systems.manifold:manifold-ext:2021.1.14'
+	annotationProcessor 'systems.manifold:manifold-all:2021.1.14'
 
 }
 
