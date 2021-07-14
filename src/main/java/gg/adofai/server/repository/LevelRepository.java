@@ -27,6 +27,12 @@ public class LevelRepository {
                 .getResultList();
     }
 
+    public List<Level> findAll(List<Long> ids) {
+        return em.createQuery("select l from Level l where l.level_id = :ids", Level.class)
+                .setParameter("ids", ids)
+                .getResultList();
+    }
+
     public Level findByTitle(String title) {
         List<Level> result = findByTitles(List.of(title));
         return result.isEmpty() ? null : result.get(0);
