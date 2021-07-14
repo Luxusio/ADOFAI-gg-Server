@@ -1,7 +1,7 @@
 package gg.adofai.server.domain.entity.level;
 
 
-import gg.adofai.server.domain.entity.member.Member;
+import gg.adofai.server.domain.entity.member.Person;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -22,8 +22,8 @@ public class LevelSet {
     private LevelRequest levelRequest;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "person_id")
+    @NotEmpty private Person person;
 
     @NotEmpty private Double setDifficulty;
 

@@ -1,9 +1,10 @@
 package gg.adofai.server.domain.entity.level;
 
-import gg.adofai.server.domain.entity.member.Member;
+import gg.adofai.server.domain.entity.member.Person;
 import lombok.Getter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -20,7 +21,7 @@ public class LevelCreator {
     private Level level;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "person_id")
+    @NotEmpty private Person person;
 
 }
