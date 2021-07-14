@@ -1,13 +1,12 @@
 package gg.adofai.server.service.forum;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class GoogleSheetConverterTest {
 
@@ -34,7 +33,7 @@ class GoogleSheetConverterTest {
         assertEquals("{data:\"data\"", result4);
         assertEquals("data:\"data\"}", result5);
     }
-    
+
     @Test
     void toRowDataList() throws Exception {
         // given
