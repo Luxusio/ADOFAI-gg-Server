@@ -46,4 +46,22 @@ public class PlayLog {
 
     @NotEmpty private Integer dislikes;
 
+    public static PlayLog createPlayLog(Person person, Level level, LocalDateTime date, Integer speed, Double accuracy, Double playPoint, String url, String description, Boolean accept) {
+        PlayLog playLog = new PlayLog();
+        playLog.person = person;
+        playLog.level = level;
+        playLog.date = date;
+        playLog.speed = speed;
+        playLog.accuracy = accuracy;
+        playLog.playPoint = playPoint;
+        playLog.url = url;
+        playLog.description = description;
+        playLog.accept = accept;
+        playLog.looks = 0;
+        playLog.likes = 0;
+        playLog.dislikes = 0;
+
+        return playLog;
+    }
+
 }
