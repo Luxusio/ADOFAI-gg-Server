@@ -1,6 +1,9 @@
 package gg.adofai.server.domain.entity.level;
 
+import gg.adofai.server.domain.entity.member.Person;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -12,6 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity @Table(name = "level")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Level {
 
     @Id @GeneratedValue
@@ -69,5 +73,34 @@ public class Level {
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LevelCreator> levelCreators = new ArrayList<>();
+
+    public static Level createLevel(Long id, Song song, String title, String description, Double difficulty, Double detailDifficulty,
+                 Long tile, Boolean epilepsyWarning, String video, String file, String workshop, Boolean isShown,
+                 LocalDateTime date, LocalDateTime lastUpdate,
+                 Integer look, Integer likes, Integer dislikes, Integer comments, List<Person> levelCreators) {
+        Level level = new Level();
+
+        level.id = id;
+        level.song = song;
+        level.title = title;
+        level.description = description;
+        level.difficulty = difficulty;
+        level.detailDifficulty = detailDifficulty;
+        level.tile = tile;
+        level.epilepsyWarning = epilepsyWarning;
+        level.video = video;
+        level.file = file;
+        level.workshop = workshop;
+        level.isShown = isShown;
+        level.date = date;
+        level.lastUpdate = lastUpdate;
+        level.look = look;
+        level.likes = likes;
+        level.dislikes = dislikes;
+        level.comments = comments;
+        level.levelCreators.addAll(levelCreators.mapToList(LevelCreator::createLevelCreator));
+
+        return level;
+    }
 
 }

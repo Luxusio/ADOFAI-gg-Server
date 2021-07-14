@@ -24,4 +24,11 @@ public class LevelCreator {
     @JoinColumn(name = "person_id")
     @NotEmpty private Person person;
 
+    public static LevelCreator createLevelCreator(Person person) {
+        LevelCreator levelCreator = new LevelCreator();
+        levelCreator.person = person;
+
+        return levelCreator;
+    }
+
 }
