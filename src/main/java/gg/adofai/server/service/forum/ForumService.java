@@ -15,6 +15,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -66,7 +67,12 @@ public class ForumService {
         this.tagRepository = tagRepository;
         this.tagsRepository = tagsRepository;
         this.playLogRepository = playLogRepository;
-        client = builder.baseUrl(BASE_URL).build();
+
+        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
+                .codecs(configure -> configure.defaultCodecs().maxInMemorySize(-1)).build();
+
+        client = builder.exchangeStrategies(exchangeStrategies)
+                .baseUrl(BASE_URL).build();
     }
 
     public void updateAllData() {
@@ -78,18 +84,9 @@ public class ForumService {
         List<ForumPlayLogDto> ppWorkDtoList = safeValue(ppWorkDtoListMono.block(), List.of());
         List<ForumTagDto> tagDtoList = safeValue(tagDtoListMono.block(), List.of());
 
-        if (levelDtoList.isEmpty()) {
-            System.err.println("levelDtoList is null!!");
-            return;
-        }
-        if (ppWorkDtoList.isEmpty()) {
-            System.err.println("ppWorkDtoList is null!!");
-            return;
-        }
-        if (tagDtoList.isEmpty()) {
-            System.err.println("tagDtoList is null!!");
-            return;
-        }
+        if (levelDtoList.isEmpty()) throw new RuntimeException("levelDtoList is null!!");
+        if (ppWorkDtoList.isEmpty()) throw new RuntimeException("ppWorkDtoList is null!!");
+        if (tagDtoList.isEmpty()) throw new RuntimeException("tagDtoList is null!!");
 
         // reset database
         initRepository.resetDB();
