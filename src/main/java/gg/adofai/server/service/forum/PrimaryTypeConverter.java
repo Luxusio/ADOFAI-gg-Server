@@ -16,9 +16,16 @@ public class PrimaryTypeConverter {
                 .collect(Collectors.toList());
     }
 
+    public static <T extends Number> T safeNumber(Number number, Class<T> type) {
+        return number == null ? null : NumberUtils.convertNumberToTargetClass(number, type);
+    }
+
     public static Double safeDouble(Number number) {
-        return number == null ? null :
-                NumberUtils.convertNumberToTargetClass(number, Double.class);
+        return safeNumber(number, Double.class);
+    }
+
+    public static Integer safeInteger(Number number) {
+        return safeNumber(number, Integer.class);
     }
 
     public static <T> @NonNull T safeValue(T value, @NonNull T defaultValue) {
