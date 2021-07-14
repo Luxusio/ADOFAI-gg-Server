@@ -10,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -98,7 +99,7 @@ public class Level {
         level.likes = likes;
         level.dislikes = dislikes;
         level.comments = comments;
-        level.levelCreators.addAll(levelCreators.mapToList(LevelCreator::createLevelCreator));
+        level.levelCreators.addAll(levelCreators.stream().map(LevelCreator::createLevelCreator).collect(Collectors.toList()));
 
         return level;
     }

@@ -35,7 +35,7 @@ public class Song {
         song.name = name;
         song.minBpm = minBpm;
         song.maxBpm = maxBpm;
-        song.artists.addAll(artists.mapToList(SongArtist::createSongArtist));
+        song.artists.addAll(artists.stream().map(SongArtist::createSongArtist).collect(Collectors.toList()));
 
         return song;
     }
