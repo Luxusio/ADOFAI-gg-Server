@@ -36,4 +36,12 @@ public class PrimaryTypeConverter {
         return value == null ? defaultValue : value;
     }
 
+//    @SuppressWarnings("unchecked")
+//    public static <T> Class<T> getGenericClass() {
+//        Type[] actualTypeArguments = ((ParameterizedType) new ArrayList<T>(0).getClass()
+//                .getGenericSuperclass()).getActualTypeArguments();
+//        Type clazz = actualTypeArguments[0];
+//        return (Class<T>) clazz.getClass();
+//    }
+
 }
