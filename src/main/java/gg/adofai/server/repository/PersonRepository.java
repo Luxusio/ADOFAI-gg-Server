@@ -32,7 +32,7 @@ public class PersonRepository {
     }
 
     public List<Person> findByNames(List<String> names) {
-        return em.createQuery("select p from Person p where p.name = :names", Person.class)
+        return em.createQuery("select p from Person p where p.name in :names", Person.class)
                 .setParameter("names", names)
                 .getResultList();
     }
