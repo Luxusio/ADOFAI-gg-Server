@@ -20,6 +20,7 @@ public class Song {
     @Column(name = "song_id")
     private Long id;
 
+    @Column(length = 1024)
     @NotNull private String name;
 
     @NotNull private Double minBpm;

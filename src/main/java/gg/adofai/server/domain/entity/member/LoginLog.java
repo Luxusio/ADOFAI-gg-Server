@@ -1,7 +1,7 @@
 package gg.adofai.server.domain.entity.member;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -15,12 +15,11 @@ public class LoginLog {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    @NotNull private Member member;
 
-    @NotEmpty
-    private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
-    @NotEmpty private Long ip;
+    @NotNull private Long ip;
 
     private String way;
 

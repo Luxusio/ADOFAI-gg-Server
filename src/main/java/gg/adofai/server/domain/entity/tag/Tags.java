@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -23,7 +24,7 @@ public class Tags {
 
     @NotEmpty private String location;
 
-    @NotEmpty private Long locationId;
+    @NotNull private Long locationId;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "tag_id")

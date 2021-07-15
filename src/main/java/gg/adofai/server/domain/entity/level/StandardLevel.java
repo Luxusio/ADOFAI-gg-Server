@@ -3,7 +3,7 @@ package gg.adofai.server.domain.entity.level;
 import lombok.Getter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -17,12 +17,12 @@ public class StandardLevel {
 
     @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "level_id")
-    @NotEmpty private Level level;
+    @NotNull private Level level;
 
-    @NotEmpty private Boolean easiestLevel;
+    @NotNull private Boolean easiestLevel;
 
-    @NotEmpty private Double difficulty;
+    @NotNull private Double difficulty;
 
-    @NotEmpty private Integer idx;
+    @NotNull private Integer idx;
 
 }

@@ -28,22 +28,44 @@ public class Level {
     @JoinColumn(name = "song_id")
     private Song song;
 
+    @Column(length = 1024)
     @NotNull private String title;
+
+    @Column(length = 1024)
     @NotNull private String description;
+
     @NotNull private Double difficulty;
+
     @NotNull private Double detailDifficulty;
+
     @NotNull private Long tile;
+
     @NotNull private Boolean epilepsyWarning;
-    @NotNull private String video;
-    @NotNull private String file;
+
+    @Column(length = 1024)
+    @NotEmpty private String video;
+
+    @Column(length = 1024)
+    @NotEmpty private String file;
+
+    @Column(length = 1024)
     private String workshop;
+
     @NotNull private Boolean isShown;
+
     @NotNull private LocalDateTime date;
+
     @NotNull private LocalDateTime lastUpdate;
+
     @NotNull private Integer look;
+
     @NotNull private Integer likes;
+
     @NotNull private Integer dislikes;
+
     @NotNull private Integer comments;
+
+    // TODO : change max length of strings. for example) length=65536
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LevelCreator> levelCreators = new ArrayList<>();

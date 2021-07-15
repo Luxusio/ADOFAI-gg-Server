@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -20,31 +21,32 @@ public class PlayLog {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "person_id")
-    @NotEmpty private Person person;
+    @NotNull
+    private Person person;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "level_id")
-    @NotEmpty private Level level;
+    @NotNull private Level level;
 
-    @NotEmpty private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
-    @NotEmpty private Integer speed;
+    @NotNull private Integer speed;
 
-    @NotEmpty private Double accuracy;
+    @NotNull private Double accuracy;
 
-    @NotEmpty private Double playPoint;
+    @NotNull private Double playPoint;
 
     @NotEmpty private String url;
 
-    @NotEmpty private String description;
+    @NotNull private String description;
 
-    @NotEmpty private Boolean accept;
+    @NotNull private Boolean accept;
 
-    @NotEmpty private Integer looks;
+    @NotNull private Integer looks;
 
-    @NotEmpty private Integer likes;
+    @NotNull private Integer likes;
 
-    @NotEmpty private Integer dislikes;
+    @NotNull private Integer dislikes;
 
     public static PlayLog createPlayLog(Person person, Level level, LocalDateTime date, Integer speed, Double accuracy, Double playPoint, String url, String description, Boolean accept) {
         PlayLog playLog = new PlayLog();

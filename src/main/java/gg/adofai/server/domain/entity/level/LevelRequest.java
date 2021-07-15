@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -19,16 +20,16 @@ public class LevelRequest {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "level_id")
-    @NotEmpty private Level level;
+    @NotNull private Level level;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "person_id")
-    @NotEmpty private Person person;
+    @NotNull private Person person;
 
     private Double expectDifficulty;
 
     @NotEmpty private String comment;
 
-    @NotEmpty private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
 }
