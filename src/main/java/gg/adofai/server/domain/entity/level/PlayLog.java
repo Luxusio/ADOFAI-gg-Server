@@ -15,14 +15,13 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 public class PlayLog {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "play_log_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "person_id")
-    @NotNull
-    private Person person;
+    @NotNull private Person person;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "level_id")

@@ -12,7 +12,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 public class ProgramFile {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "program_file_id")
     private Long id;
 

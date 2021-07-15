@@ -13,7 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 public class LevelSet {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "level_set_id")
     private Long id;
 

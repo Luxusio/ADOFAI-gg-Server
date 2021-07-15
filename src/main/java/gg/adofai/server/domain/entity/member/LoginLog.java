@@ -9,7 +9,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity @Table(name = "login_log")
 public class LoginLog {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "login_log_id")
     private Long id;
 
