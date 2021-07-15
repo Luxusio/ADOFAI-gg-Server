@@ -28,50 +28,22 @@ public class Level {
     @JoinColumn(name = "song_id")
     private Song song;
 
-    @NotNull
-    private String title;
-
-    @NotEmpty
-    private String description;
-
-    @NotEmpty
-    private Double difficulty;
-
-    @NotEmpty
-    private Double detailDifficulty;
-
-    @NotEmpty
-    private Long tile;
-
-    @NotEmpty
-    private Boolean epilepsyWarning;
-
-    @NotNull
-    private String video;
-
-    @NotNull
-    private String file;
-
+    @NotNull private String title;
+    @NotNull private String description;
+    @NotNull private Double difficulty;
+    @NotNull private Double detailDifficulty;
+    @NotNull private Long tile;
+    @NotNull private Boolean epilepsyWarning;
+    @NotNull private String video;
+    @NotNull private String file;
     private String workshop;
-
-    @NotNull
-    private Boolean isShown;
-
+    @NotNull private Boolean isShown;
     @NotNull private LocalDateTime date;
-
     @NotNull private LocalDateTime lastUpdate;
-
-    @NotNull
-    private Integer look;
-
-    @NotNull
-    private Integer likes;
-
-    @NotNull
-    private Integer dislikes;
-
-    @NotNull
-    private Integer comments;
+    @NotNull private Integer look;
+    @NotNull private Integer likes;
+    @NotNull private Integer dislikes;
+    @NotNull private Integer comments;
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LevelCreator> levelCreators = new ArrayList<>();
@@ -100,7 +72,9 @@ public class Level {
         level.likes = likes;
         level.dislikes = dislikes;
         level.comments = comments;
-        level.levelCreators.addAll(levelCreators.stream().map(LevelCreator::createLevelCreator).collect(Collectors.toList()));
+        level.levelCreators.addAll(levelCreators.stream()
+                .map(creator-> LevelCreator.createLevelCreator(level, creator))
+                .collect(Collectors.toList()));
 
         return level;
     }

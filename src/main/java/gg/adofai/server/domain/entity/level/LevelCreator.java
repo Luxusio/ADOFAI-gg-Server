@@ -4,7 +4,7 @@ import gg.adofai.server.domain.entity.member.Person;
 import lombok.Getter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -18,14 +18,15 @@ public class LevelCreator {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "level_id")
-    private Level level;
+    @NotNull private Level level;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "person_id")
-    @NotEmpty private Person person;
+    @NotNull private Person person;
 
-    public static LevelCreator createLevelCreator(Person person) {
+    public static LevelCreator createLevelCreator(Level level, Person person) {
         LevelCreator levelCreator = new LevelCreator();
+        levelCreator.level = level;
         levelCreator.person = person;
 
         return levelCreator;
