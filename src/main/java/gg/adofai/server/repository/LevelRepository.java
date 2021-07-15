@@ -31,7 +31,7 @@ public class LevelRepository {
     }
 
     public List<Level> findAll(List<Long> ids) {
-        return em.createQuery("select l from Level l where l.level_id = :ids", Level.class)
+        return em.createQuery("select l from Level l where l.id in :ids", Level.class)
                 .setParameter("ids", ids)
                 .getResultList();
     }
@@ -42,7 +42,7 @@ public class LevelRepository {
     }
 
     public List<Level> findByTitles(List<String> titles) {
-        return em.createQuery("select l from Level l where l.title = :titles", Level.class)
+        return em.createQuery("select l from Level l where l.title in :titles", Level.class)
                 .setParameter("titles", titles)
                 .getResultList();
     }

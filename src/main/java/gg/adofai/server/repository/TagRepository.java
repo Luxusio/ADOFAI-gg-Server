@@ -32,7 +32,7 @@ public class TagRepository {
     }
 
     public List<Tag> findByNames(List<String> names) {
-        return em.createQuery("select t from Tag t where t.name = :names", Tag.class)
+        return em.createQuery("select t from Tag t where t.name in :names", Tag.class)
                 .setParameter("names", names)
                 .getResultList();
     }
