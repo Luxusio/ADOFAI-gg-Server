@@ -18,6 +18,10 @@ public class LevelRepository {
         em.persist(level);
     }
 
+    public void merge(Level level) {
+        em.merge(level);
+    }
+
     public Level findOne(Long id) {
         return em.find(Level.class, id);
     }
