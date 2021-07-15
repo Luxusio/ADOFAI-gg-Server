@@ -1,7 +1,7 @@
 package gg.adofai.server.domain.entity.member;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -9,18 +9,17 @@ import static javax.persistence.FetchType.LAZY;
 @Entity @Table(name = "login_log")
 public class LoginLog {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "login_log_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    @NotNull private Member member;
 
-    @NotEmpty
-    private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
-    @NotEmpty private Long ip;
+    @NotNull private Long ip;
 
     private String way;
 

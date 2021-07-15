@@ -7,7 +7,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity @Table(name = "member_permission")
 public class MemberPermission {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_permission_id")
     private Long id;
 

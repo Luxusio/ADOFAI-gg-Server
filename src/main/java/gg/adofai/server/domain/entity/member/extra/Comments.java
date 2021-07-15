@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -13,33 +14,33 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 public class Comments {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comments_id")
     private Long id;
 
     @NotEmpty private String location;
 
-    @NotEmpty private Long locationId;
+    @NotNull private Long locationId;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
-    @NotEmpty private Member member;
+    @NotNull private Member member;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
-    @NotEmpty private Comments parent;
+    @NotNull private Comments parent;
 
     @NotEmpty private String text;
 
-    @NotEmpty private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
-    @NotEmpty private Integer likes;
+    @NotNull private Integer likes;
 
-    @NotEmpty private Integer dislikes;
+    @NotNull private Integer dislikes;
 
-    @NotEmpty private Long ip;
+    @NotNull private Long ip;
 
-    @NotEmpty private Boolean deleted;
+    @NotNull private Boolean deleted;
 
 
 }

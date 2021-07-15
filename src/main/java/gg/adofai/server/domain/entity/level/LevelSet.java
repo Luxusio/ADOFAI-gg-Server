@@ -1,11 +1,11 @@
 package gg.adofai.server.domain.entity.level;
 
 
-import gg.adofai.server.domain.entity.member.Member;
+import gg.adofai.server.domain.entity.member.Person;
 import lombok.Getter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -13,7 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 public class LevelSet {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "level_set_id")
     private Long id;
 
@@ -22,9 +22,9 @@ public class LevelSet {
     private LevelRequest levelRequest;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "person_id")
+    @NotNull private Person person;
 
-    @NotEmpty private Double setDifficulty;
+    @NotNull private Double setDifficulty;
 
 }

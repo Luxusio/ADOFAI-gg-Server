@@ -1,10 +1,11 @@
 package gg.adofai.server.domain.entity.level;
 
-import gg.adofai.server.domain.entity.member.Member;
+import gg.adofai.server.domain.entity.member.Person;
 import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -13,22 +14,22 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 public class LevelRequest {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "level_request_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "level_id")
-    private Level level;
+    @NotNull private Level level;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "person_id")
+    @NotNull private Person person;
 
     private Double expectDifficulty;
 
     @NotEmpty private String comment;
 
-    @NotEmpty private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
 }

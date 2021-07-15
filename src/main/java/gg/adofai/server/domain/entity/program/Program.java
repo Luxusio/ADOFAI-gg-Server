@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,27 +13,28 @@ import java.util.List;
 @Getter
 public class Program {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "program_id")
     private Long id;
 
     @NotEmpty private String title;
 
-    @NotEmpty private String simpleDescription;
+    @NotNull
+    private String simpleDescription;
 
-    @NotEmpty private String description;
+    @NotNull private String description;
 
-    @NotEmpty private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
-    @NotEmpty private LocalDateTime lastEdit;
+    @NotNull private LocalDateTime lastEdit;
 
-    @NotEmpty private Integer looks;
+    @NotNull private Integer looks;
 
-    @NotEmpty private Integer likes;
+    @NotNull private Integer likes;
 
-    @NotEmpty private Integer dislikes;
+    @NotNull private Integer dislikes;
 
-    @NotEmpty private Integer comments;
+    @NotNull private Integer comments;
 
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProgramCreator> programCreators = new ArrayList<>();

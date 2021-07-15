@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -12,22 +13,23 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 public class ProgramUpdate {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "program_update_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "program_id")
-    @NotEmpty private Program program;
+    @NotNull
+    private Program program;
 
     @NotEmpty private String version;
 
-    @NotEmpty private String description;
+    @NotNull private String description;
 
-    @NotEmpty private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
-    @NotEmpty private Integer likes;
+    @NotNull private Integer likes;
 
-    @NotEmpty private Integer dislikes;
+    @NotNull private Integer dislikes;
 
 }

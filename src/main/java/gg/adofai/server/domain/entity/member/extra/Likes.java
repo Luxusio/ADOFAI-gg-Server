@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -12,21 +13,21 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 public class Likes {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "likes_id")
     private Long id;
 
     @NotEmpty private String location;
 
-    @NotEmpty private Long locationId;
+    @NotNull private Long locationId;
 
-    @NotEmpty private Boolean isLike;
+    @NotNull private Boolean isLike;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
-    @NotEmpty private Member member;
+    @NotNull private Member member;
 
-    @NotEmpty private Long ip;
+    @NotNull private Long ip;
 
 
 

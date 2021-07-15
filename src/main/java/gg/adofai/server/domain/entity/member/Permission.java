@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 public class Permission {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "permission_id")
     private Long id;
 
