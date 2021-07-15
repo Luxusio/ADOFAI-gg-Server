@@ -10,23 +10,24 @@ import gg.adofai.server.repository.*;
 import gg.adofai.server.service.forum.dto.ForumLevelDto;
 import gg.adofai.server.service.forum.dto.ForumPlayLogDto;
 import gg.adofai.server.service.forum.dto.ForumTagDto;
-import lombok.NoArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import javax.validation.UnexpectedTypeException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static gg.adofai.server.service.forum.PrimaryTypeConverter.safeInteger;
@@ -55,6 +56,8 @@ public class ForumService {
     private final PlayLogRepository playLogRepository;
 
     private final WebClient client;
+
+    // Problem : all table uses same auto_increment value. we need to fix it.
 
     public ForumService(InitRepository initRepository, PersonRepository personRepository, SongRepository songRepository,
                         LevelRepository levelRepository, TagRepository tagRepository, TagsRepository tagsRepository,
@@ -92,12 +95,17 @@ public class ForumService {
         initRepository.resetDB();
 
         // add person
+        Map<String, String> nameConvertMap = new ConcurrentHashMap<>();
         Stream.concat(
-                levelDtoList.stream().flatMap(forumLevelDto -> Stream.concat(
+                levelDtoList.stream().flatMap(forumLevelDto -> Stream.concat (
                         forumLevelDto.getArtists().stream(),
                         forumLevelDto.getCreators().stream())),
                 ppWorkDtoList.stream().map(ForumPlayLogDto::getName)
-        ).distinct().map(Person::createPerson)
+        ).filter(s -> {
+            if (nameConvertMap.containsKey(s.toLowerCase())) return false;
+            nameConvertMap.put(s.toLowerCase(), s);
+            return true;
+        }).map(Person::createPerson)
                 .forEach(personRepository::save);
 
         // add tag
@@ -116,8 +124,12 @@ public class ForumService {
 
                     Double minBpm = safeValue(forumLevelDto.getMinBpm(), 0.0);
                     Double maxBpm = safeValue(forumLevelDto.getMaxBpm(), 0.0);
-                    List<Person> artists = personRepository.findByNames(forumLevelDto.getArtists());
+                    List<String> artistNames = listEntry.getValue().stream()
+                            .flatMap(dto -> dto.getArtists().stream())
+                            .map(name->nameConvertMap.get(name.toLowerCase()))
+                            .distinct().collect(Collectors.toList());
 
+                    List<Person> artists = personRepository.findByNames(artistNames);
                     return Song.createSong(song, minBpm, maxBpm, artists);
                 }).forEach(songRepository::save);
 
@@ -127,9 +139,11 @@ public class ForumService {
             List<Person> levelCreators = personRepository.findByNames(forumLevelDto.getCreators());
 
             return Level.createLevel(
-                    forumLevelDto.getId(), song, forumLevelDto.getSong(), "", forumLevelDto.getLevel(),
-                    0.0, forumLevelDto.getTiles(), forumLevelDto.getEpilepsyWarning(), forumLevelDto.getVideo(),
-                    forumLevelDto.getDownload(), forumLevelDto.getWorkshop(), true, LocalDateTime.now(),
+                    forumLevelDto.getId(), song, forumLevelDto.getSong() , "", forumLevelDto.getLevel(),
+                    0.0, safeValue(forumLevelDto.getTiles(), 0L), forumLevelDto.getEpilepsyWarning(),
+                    safeValue(forumLevelDto.getVideo(), " "),
+                    safeValue(forumLevelDto.getDownload(), " "),
+                    forumLevelDto.getWorkshop(), true, LocalDateTime.now(),
                     LocalDateTime.now(), 0, 0, 0, 0, levelCreators);
         }).forEach(levelRepository::save);
 
@@ -140,13 +154,26 @@ public class ForumService {
         }).forEach(tagsRepository::save);
 
         // add play log
-        List<Person> playerList = personRepository.findByNames(ppWorkDtoList.stream().map(ForumPlayLogDto::getName).collect(Collectors.toList()));
-        List<Level> levelList = levelRepository.findAll(ppWorkDtoList.stream().map(ForumPlayLogDto::getMapId).collect(Collectors.toList()));
-        IntStream.range(0, ppWorkDtoList.size())
-                .mapToObj(i -> {
-                    ForumPlayLogDto dto = ppWorkDtoList.get(i);
-                    return PlayLog.createPlayLog(playerList.get(i), levelList.get(i), dto.getTimeStamp(),
-                            safeInteger(dto.getSpeed()), dto.getAccuracy(), dto.getPp(), dto.getUrl(), "", dto.getLevel() != 0 && dto.getLevel() != 22);
+        Map<String, Person> playerMap = personRepository.findByNames(
+                ppWorkDtoList.stream()
+                        .map(ForumPlayLogDto::getName)
+                        .collect(Collectors.toList())).stream()
+                .collect(Collectors.toMap(Person::getName, p->p));
+
+        Map<Long, Level> levelMap = levelRepository.findAll(
+                ppWorkDtoList.stream()
+                        .map(ForumPlayLogDto::getMapId)
+                        .collect(Collectors.toList())).stream()
+                .collect(Collectors.toMap(Level::getId, l->l));
+
+        ppWorkDtoList.stream()
+                .map(dto-> {
+                    Person player = playerMap.get(nameConvertMap.get(dto.getName().toLowerCase()));
+                    Level level = levelMap.get(dto.getMapId());
+
+                    return PlayLog.createPlayLog(player, level,
+                            dto.getTimeStamp(), safeInteger(dto.getSpeed()), dto.getAccuracy(), dto.getPp(),
+                            dto.getUrl(), "", true);
                 }).forEach(playLogRepository::save);
 
     }
