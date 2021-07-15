@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class Level {
     @JoinColumn(name = "song_id")
     private Song song;
 
-    @NotEmpty
+    @NotNull
     private String title;
 
     @NotEmpty
@@ -45,31 +46,31 @@ public class Level {
     @NotEmpty
     private Boolean epilepsyWarning;
 
-    @NotEmpty
+    @NotNull
     private String video;
 
-    @NotEmpty
+    @NotNull
     private String file;
 
     private String workshop;
 
-    @NotEmpty
+    @NotNull
     private Boolean isShown;
 
-    @NotEmpty private LocalDateTime date;
+    @NotNull private LocalDateTime date;
 
-    @NotEmpty private LocalDateTime lastUpdate;
+    @NotNull private LocalDateTime lastUpdate;
 
-    @NotEmpty
+    @NotNull
     private Integer look;
 
-    @NotEmpty
+    @NotNull
     private Integer likes;
 
-    @NotEmpty
+    @NotNull
     private Integer dislikes;
 
-    @NotEmpty
+    @NotNull
     private Integer comments;
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

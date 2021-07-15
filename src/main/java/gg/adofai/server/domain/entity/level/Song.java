@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,12 +20,11 @@ public class Song {
     @Column(name = "song_id")
     private Long id;
 
-    @NotEmpty
-    private String name;
+    @NotNull private String name;
 
-    @NotEmpty private Double minBpm;
+    @NotNull private Double minBpm;
 
-    @NotEmpty private Double maxBpm;
+    @NotNull private Double maxBpm;
 
     @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SongArtist> artists = new ArrayList<>();
@@ -35,7 +34,9 @@ public class Song {
         song.name = name;
         song.minBpm = minBpm;
         song.maxBpm = maxBpm;
-        song.artists.addAll(artists.stream().map(SongArtist::createSongArtist).collect(Collectors.toList()));
+        song.artists.addAll(artists.stream()
+                .map(artist -> SongArtist.createSongArtist(song, artist))
+                .collect(Collectors.toList()));
 
         return song;
     }

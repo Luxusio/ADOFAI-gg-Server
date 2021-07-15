@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity @Table(name = "tag", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "type", "name" })
@@ -22,7 +23,8 @@ public class Tag {
 
     @NotEmpty private String name;
 
-    @NotEmpty private Long priority;
+    @NotNull
+    private Long priority;
 
     @SuppressWarnings("rawtypes")
     public static Tag createTag(Class type, String name, Long priority) {

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity @Table(name = "person")
 @Getter
@@ -16,7 +16,7 @@ public class Person {
     @Column(name = "person_id")
     private Long id;
 
-    @NotEmpty
+    @NotNull
     @Column(unique = true)
     private String name;
 
