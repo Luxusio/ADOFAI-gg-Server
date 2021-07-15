@@ -46,16 +46,16 @@ public class ForumLevelDto {
         String epilepsyWarningStr = safe(jsonArray.get(8));
         dto.epilepsyWarning = epilepsyWarningStr == null ? null : !epilepsyWarningStr.equals("X");
 
-        String bpmString = safe(jsonArray.get(9));
-        if (bpmString != null) {
-            int idx = bpmString.indexOf('-');
-            if (idx != -1) {
-                dto.minBpm = Double.parseDouble(bpmString.substring(0, idx).trim());
-                dto.maxBpm = Double.parseDouble(bpmString.substring(idx + 1).trim());
+        Object bpmObject = safe(jsonArray.get(9));
+        if (bpmObject != null) {
+            if (bpmObject instanceof Number) {
+                dto.minBpm = safeDouble((Number) bpmObject);
+                dto.maxBpm = dto.minBpm;
             }
             else {
-                dto.minBpm = Double.parseDouble(bpmString);
-                dto.maxBpm = dto.minBpm;
+                String[] result = ((String) bpmObject).split("-");
+                dto.minBpm = Double.parseDouble(result[0].trim());
+                dto.maxBpm = Double.parseDouble(result[1].trim());
             }
         }
         else {
