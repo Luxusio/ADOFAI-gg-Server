@@ -6,6 +6,7 @@ import manifold.ext.rt.api.Jailbreak;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class ForumServiceSpringTest {
     PersonRepository personRepository;
 
     @Test
+    @Rollback(value = false)
     void testInitDatabase() {
         // given
 
