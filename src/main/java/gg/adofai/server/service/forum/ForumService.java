@@ -10,6 +10,8 @@ import gg.adofai.server.repository.*;
 import gg.adofai.server.service.forum.dto.ForumLevelDto;
 import gg.adofai.server.service.forum.dto.ForumPlayLogDto;
 import gg.adofai.server.service.forum.dto.ForumTagDto;
+import org.hibernate.jpa.spi.TupleBuilderTransformer;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -18,10 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuple3;
+import reactor.util.function.Tuples;
 
+import javax.persistence.Tuple;
 import javax.validation.UnexpectedTypeException;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -95,9 +102,41 @@ public class ForumService {
         initRepository.resetDB();
 
         // add person
-        Map<String, String> nameConvertMap = new ConcurrentHashMap<>();
-        Stream.concat(
-                levelDtoList.stream().flatMap(forumLevelDto -> Stream.concat (
+        Map<String, Person> personMap;
+        Map<String, String> nameConvertMap;
+        {
+            var result = toPersonMap(levelDtoList, ppWorkDtoList);
+            personMap = result.getT1();
+            nameConvertMap = result.getT2();
+        }
+        personMap.forEach((s, person) -> personRepository.save(person));
+
+        // add tag
+        Map<String, Tag> tagMap = toTagMap(levelDtoList, tagDtoList);
+        tagMap.forEach((s, tag) -> tagRepository.save(tag));
+
+        // add song
+        Map<String, Song> songMap = toSongMap(levelDtoList, nameConvertMap, personMap);
+        songMap.forEach((s, song) -> songRepository.save(song));
+
+        // add level
+        Map<Long, Level> levelMap = toLevelMap(levelDtoList, songMap, personMap);
+        levelMap.forEach((id, level) -> levelRepository.save(level));
+
+        // add level tag
+        toTagsStream(levelDtoList, tagMap).forEach(tagsRepository::save);
+
+        // add play log
+        toPlayLogStream(ppWorkDtoList, personMap, nameConvertMap, levelMap).forEach(playLogRepository::save);
+    }
+
+    @NotNull
+    public Tuple2<Map<String, Person>, Map<String, String>> toPersonMap(List<ForumLevelDto> levelDtoList,
+                                                                        List<ForumPlayLogDto> ppWorkDtoList) {
+
+        Map<String, String> nameConvertMap = new HashMap<>();
+        Map<String, Person> personMap = Stream.concat(
+                levelDtoList.stream().flatMap(forumLevelDto -> Stream.concat(
                         forumLevelDto.getArtists().stream(),
                         forumLevelDto.getCreators().stream())),
                 ppWorkDtoList.stream().map(ForumPlayLogDto::getName)
@@ -105,77 +144,76 @@ public class ForumService {
             if (nameConvertMap.containsKey(s.toLowerCase())) return false;
             nameConvertMap.put(s.toLowerCase(), s);
             return true;
-        }).map(Person::createPerson)
-                .forEach(personRepository::save);
+        }).map(Person::createPerson).collect(Collectors.toMap(Person::getName, p -> p));
+        return Tuples.of(personMap, nameConvertMap);
+    }
 
-        // add tag
-        Stream.concat(
+    @NotNull
+    private Map<String, Tag> toTagMap(List<ForumLevelDto> levelDtoList, List<ForumTagDto> tagDtoList) {
+        return Stream.concat(
                 levelDtoList.stream().flatMap(forumLevelDto -> forumLevelDto.getTags().stream()),
                 tagDtoList.stream().map(ForumTagDto::getName)
-        ).distinct().map(name->Tag.createTag(Level.class, name, 1L))
-                .forEach(tagRepository::save);
+        ).distinct().map(name -> Tag.createTag(Level.class, name, 1L))
+                .collect(Collectors.toMap(Tag::getName, t -> t));
+    }
 
-        // add song
-        levelDtoList.stream()
-                .collect(Collectors.groupingBy(ForumLevelDto::getSong)).entrySet().stream()
+    @NotNull
+    private Map<String, Song> toSongMap(List<ForumLevelDto> levelDtoList, Map<String, String> nameConvertMap, Map<String, Person> personMap) {
+        return levelDtoList.stream()
+                .collect(Collectors.groupingBy(dto-> Song.getNameWithArtists(dto.getSong(), dto.getArtists()))).entrySet().stream()
                 .map(listEntry -> {
                     String song = safeValue(listEntry.getKey(), "");
                     ForumLevelDto forumLevelDto = listEntry.getValue().get(0);
 
                     Double minBpm = safeValue(forumLevelDto.getMinBpm(), 0.0);
                     Double maxBpm = safeValue(forumLevelDto.getMaxBpm(), 0.0);
-                    List<String> artistNames = listEntry.getValue().stream()
+                    List<Person> artists = listEntry.getValue().stream()
                             .flatMap(dto -> dto.getArtists().stream())
-                            .map(name->nameConvertMap.get(name.toLowerCase()))
-                            .distinct().collect(Collectors.toList());
+                            .map(name -> nameConvertMap.get(name.toLowerCase()))
+                            .distinct().map(personMap::get).collect(Collectors.toList());
 
-                    List<Person> artists = personRepository.findByNames(artistNames);
-                    return Song.createSong(song, minBpm, maxBpm, artists);
-                }).forEach(songRepository::save);
+                    return Song.createSong(song, minBpm, maxBpm, artists); })
+                .collect(Collectors.toMap(Song::getNameWithArtists, s -> s));
+    }
 
-        // add level
-        levelDtoList.stream().map(forumLevelDto -> {
-            Song song = songRepository.findByName(safeValue(forumLevelDto.getSong(), ""));
-            List<Person> levelCreators = personRepository.findByNames(forumLevelDto.getCreators());
+    @NotNull
+    private Map<Long, Level> toLevelMap(List<ForumLevelDto> levelDtoList, Map<String, Song> songMap, Map<String, Person> personMap) {
+        return levelDtoList.stream().map(forumLevelDto -> {
+            Song song = songMap.get(Song.getNameWithArtists(
+                    safeValue(forumLevelDto.getSong(), ""), forumLevelDto.getArtists()));
+            List<Person> levelCreators = forumLevelDto.getCreators().stream()
+                    .map(personMap::get).collect(Collectors.toList());
 
             return Level.createLevel(
-                    forumLevelDto.getId(), song, forumLevelDto.getSong() , "", forumLevelDto.getLevel(),
+                    forumLevelDto.getId(), song, forumLevelDto.getSong(), "", forumLevelDto.getLevel(),
                     0.0, safeValue(forumLevelDto.getTiles(), 0L), forumLevelDto.getEpilepsyWarning(),
                     safeValue(forumLevelDto.getVideo(), " "),
                     safeValue(forumLevelDto.getDownload(), " "),
                     forumLevelDto.getWorkshop(), true, LocalDateTime.now(),
                     LocalDateTime.now(), 0, 0, 0, 0, levelCreators);
-        }).forEach(levelRepository::save);
+        }).collect(Collectors.toMap(Level::getId, l->l));
+    }
 
-        // add level tag
-        levelDtoList.stream().flatMap(forumLevelDto -> {
-            List<Tag> tags = tagRepository.findByNames(forumLevelDto.getTags());
+    @NotNull
+    private Stream<Tags> toTagsStream(List<ForumLevelDto> levelDtoList, Map<String, Tag> tagMap) {
+        return levelDtoList.stream().flatMap(forumLevelDto -> {
+            List<Tag> tags = forumLevelDto.getTags().stream()
+                    .map(tagMap::get).collect(Collectors.toList());
             return tags.stream().map(tag -> Tags.createTags(tag, forumLevelDto.getId()));
-        }).forEach(tagsRepository::save);
+        });
+    }
 
-        // add play log
-        Map<String, Person> playerMap = personRepository.findByNames(
-                ppWorkDtoList.stream()
-                        .map(ForumPlayLogDto::getName)
-                        .collect(Collectors.toList())).stream()
-                .collect(Collectors.toMap(Person::getName, p->p));
-
-        Map<Long, Level> levelMap = levelRepository.findAll(
-                ppWorkDtoList.stream()
-                        .map(ForumPlayLogDto::getMapId)
-                        .collect(Collectors.toList())).stream()
-                .collect(Collectors.toMap(Level::getId, l->l));
-
-        ppWorkDtoList.stream()
-                .map(dto-> {
-                    Person player = playerMap.get(nameConvertMap.get(dto.getName().toLowerCase()));
+    @NotNull
+    private Stream<PlayLog> toPlayLogStream(List<ForumPlayLogDto> ppWorkDtoList, Map<String, Person> personMap, Map<String, String> nameConvertMap, Map<Long, Level> levelMap) {
+        return ppWorkDtoList.stream()
+                .map(dto -> {
+                    Person player = personMap.get(nameConvertMap.get(dto.getName().toLowerCase()));
                     Level level = levelMap.get(dto.getMapId());
 
                     return PlayLog.createPlayLog(player, level,
                             dto.getTimeStamp(), safeInteger(dto.getSpeed()), dto.getAccuracy(), dto.getPp(),
                             dto.getUrl(), "", true);
-                }).forEach(playLogRepository::save);
-
+                });
     }
 
     public <R> Mono<List<R>> getData(String gid, Function<? super JSONArray, ? extends R> mapper) {

@@ -42,4 +42,15 @@ public class Song {
         return song;
     }
 
+    public static String getNameWithArtists(String name, List<String> artists) {
+        return String.join(" & ", artists) + " - " + name;
+    }
+
+    public String getNameWithArtists() {
+        return getNameWithArtists(name,
+                artists.stream()
+                        .map(songArtist -> songArtist.getPerson().getName())
+                        .collect(Collectors.toList()));
+    }
+
 }
