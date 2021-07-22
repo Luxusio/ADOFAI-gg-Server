@@ -120,7 +120,7 @@ public class ForumService {
         songMap.forEach((s, song) -> songRepository.save(song));
 
         // add level
-        Map<Long, Level> levelMap = toLevelMap(levelDtoList, songMap, personMap);
+        Map<Long, Level> levelMap = toLevelMap(levelDtoList, songMap, nameConvertMap, personMap);
         levelMap.forEach((id, level) -> levelRepository.save(level));
 
         // add level tag
@@ -177,11 +177,12 @@ public class ForumService {
     }
 
     @NotNull
-    private Map<Long, Level> toLevelMap(List<ForumLevelDto> levelDtoList, Map<String, Song> songMap, Map<String, Person> personMap) {
+    private Map<Long, Level> toLevelMap(List<ForumLevelDto> levelDtoList, Map<String, Song> songMap, Map<String, String> nameConvertMap, Map<String, Person> personMap) {
         return levelDtoList.stream().map(forumLevelDto -> {
             Song song = songMap.get(Song.getNameWithArtists(
                     safeValue(forumLevelDto.getSong(), ""), forumLevelDto.getArtists()));
             List<Person> levelCreators = forumLevelDto.getCreators().stream()
+                    .map(name -> nameConvertMap.get(name.toLowerCase()))
                     .map(personMap::get).collect(Collectors.toList());
 
             return Level.createLevel(
@@ -196,11 +197,10 @@ public class ForumService {
 
     @NotNull
     private Stream<Tags> toTagsStream(List<ForumLevelDto> levelDtoList, Map<String, Tag> tagMap) {
-        return levelDtoList.stream().flatMap(forumLevelDto -> {
-            List<Tag> tags = forumLevelDto.getTags().stream()
-                    .map(tagMap::get).collect(Collectors.toList());
-            return tags.stream().map(tag -> Tags.createTags(tag, forumLevelDto.getId()));
-        });
+        return levelDtoList.stream().flatMap(forumLevelDto ->
+                forumLevelDto.getTags().stream().distinct()
+                        .map(tagMap::get)
+                        .map(tag -> Tags.createTags(tag, forumLevelDto.getId())));
     }
 
     @NotNull

@@ -17,8 +17,7 @@ public class ForumServiceSpringTest {
 
     @Autowired ForumService forumService;
 
-    @Autowired
-    PersonRepository personRepository;
+    @Autowired PersonRepository personRepository;
 
     @Test
     @Rollback(value = false)
