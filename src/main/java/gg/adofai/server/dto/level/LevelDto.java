@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Getter @ToString
@@ -37,14 +38,18 @@ public class LevelDto {
         this.likes = likes;
     }
 
-    public void setCreators(List<String> creators) {
+    public void setCreators(List<LevelCreatorDto> creators) {
         this.creators.clear();
-        this.creators.addAll(creators);
+        this.creators.addAll(creators.stream()
+                .map(LevelCreatorDto::getName)
+                .collect(Collectors.toList()));
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<LevelTagsDto> tags) {
         this.tags.clear();
-        this.tags.addAll(tags);
+        this.tags.addAll(tags.stream()
+                .map(LevelTagsDto::getName)
+                .collect(Collectors.toList()));
     }
 
 }
