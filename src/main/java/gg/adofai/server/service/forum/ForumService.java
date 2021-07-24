@@ -187,12 +187,16 @@ public class ForumService {
                     .map(name -> nameConvertMap.get(name.toLowerCase()))
                     .map(personMap::get).collect(Collectors.toList());
 
+            double difficulty = forumLevelDto.getLevel() == -2 || forumLevelDto.getLevel() == 22 ? 0.0 :
+                    forumLevelDto.getLevel();
+            boolean isCensored = forumLevelDto.getLevel() == -2;
+
             return Level.createLevel(
-                    forumLevelDto.getId(), song, forumLevelDto.getSong(), "", forumLevelDto.getLevel(),
+                    forumLevelDto.getId(), song, forumLevelDto.getSong(), "", difficulty,
                     0.0, safeValue(forumLevelDto.getTiles(), 0L), forumLevelDto.getEpilepsyWarning(),
                     safeValue(forumLevelDto.getVideo(), " "),
                     safeValue(forumLevelDto.getDownload(), " "),
-                    forumLevelDto.getWorkshop(), true, LocalDateTime.now(),
+                    forumLevelDto.getWorkshop(), isCensored, false, LocalDateTime.now(),
                     LocalDateTime.now(), 0, 0, 0, 0, levelCreators);
         }).collect(Collectors.toMap(Level::getId, l->l));
     }

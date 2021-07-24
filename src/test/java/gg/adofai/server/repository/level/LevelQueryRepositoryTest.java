@@ -65,21 +65,21 @@ class LevelQueryRepositoryTest {
         em.persist(timeline);
         em.persist(selfmadeDisaster);
 
-        Level levelNs = Level.createLevel(1L, ns, "[ns]", "", 20.0, 2.5, 0L, false, "", "", null, true,
+        Level levelNs = Level.createLevel(1L, ns, "[ns]", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(ruren));
-        Level levelSecretBoss = Level.createLevel(2L, secretBoss, "SECRET BOSS", "", 18.0, 2.5, 0L, false, "", "", null, true,
+        Level levelSecretBoss = Level.createLevel(2L, secretBoss, "SECRET BOSS", "", 18.0, 2.5, 0L, false, "", "", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(optimum_p));
-        Level levelSecretBossEx = Level.createLevel(3L, secretBoss, "SECRET BOSS (ex)", "", 20.0, 2.5, 0L, false, "", "", null, true,
+        Level levelSecretBossEx = Level.createLevel(3L, secretBoss, "SECRET BOSS (ex)", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(xiZnYng));
-        Level levelR = Level.createLevel(4L, r, "R", "", 20.0, 2.5, 0L, false, "", "", null, true,
+        Level levelR = Level.createLevel(4L, r, "R", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelKillerBeast = Level.createLevel(5L, killerBeast, "KillerBeast", "", 20.0, 2.5, 0L, false, "", "", null, true,
+        Level levelKillerBeast = Level.createLevel(5L, killerBeast, "KillerBeast", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelSelfmadeDisaster = Level.createLevel(6L, selfmadeDisaster, "Selfmade Disaster (Hyper ver)", "", 20.0, 2.5, 0L, false, "", "", null, true,
+        Level levelSelfmadeDisaster = Level.createLevel(6L, selfmadeDisaster, "Selfmade Disaster (Hyper ver)", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelSelfmadeDisasterEasy = Level.createLevel(7L, selfmadeDisaster, "Selfmade Disaster (easy ver)", "", 20.0, 2.5, 0L, false, "", "", null, true,
+        Level levelSelfmadeDisasterEasy = Level.createLevel(7L, selfmadeDisaster, "Selfmade Disaster (easy ver)", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelTimeline = Level.createLevel(8L, timeline, "timeline", "", 20.0, 2.5, 0L, false, "", "", null, true,
+        Level levelTimeline = Level.createLevel(8L, timeline, "timeline", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(herny));
 
         em.persist(levelNs);
@@ -96,13 +96,6 @@ class LevelQueryRepositoryTest {
 
     @Test
     void testSearchData() {
-
-        List<Level> fetch = queryFactory.selectFrom(level).limit(50).fetch();
-
-        for (Level result : fetch) {
-            System.out.println("result = " + result);
-        }
-
 
         LevelSearchCondition condition = new LevelSearchCondition();
         condition.setOffset(0L);

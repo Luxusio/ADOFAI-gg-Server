@@ -51,7 +51,9 @@ public class Level {
     @Column(length = 1024)
     private String workshop;
 
-    @NotNull private Boolean isShown;
+    @NotNull private Boolean isCensored;
+
+    @NotNull private Boolean isDeleted;
 
     @NotNull private LocalDateTime date;
 
@@ -71,7 +73,7 @@ public class Level {
     private List<LevelCreator> levelCreators = new ArrayList<>();
 
     public static Level createLevel(Long id, Song song, String title, String description, Double difficulty, Double detailDifficulty,
-                 Long tile, Boolean epilepsyWarning, String video, String file, String workshop, Boolean isShown,
+                 Long tile, Boolean epilepsyWarning, String video, String file, String workshop, Boolean isCensored, Boolean isDeleted,
                  LocalDateTime date, LocalDateTime lastUpdate,
                  Integer look, Integer likes, Integer dislikes, Integer comments, List<Person> levelCreators) {
         Level level = new Level();
@@ -87,7 +89,8 @@ public class Level {
         level.video = video;
         level.file = file;
         level.workshop = workshop;
-        level.isShown = isShown;
+        level.isCensored = isCensored;
+        level.isDeleted = isDeleted;
         level.date = date;
         level.lastUpdate = lastUpdate;
         level.look = look;
