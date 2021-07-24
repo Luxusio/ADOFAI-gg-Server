@@ -11,6 +11,7 @@ import java.util.List;
 @Getter @ToString
 public class LevelDto {
 
+    private final Long id;
     private final String title;
     private final Double difficulty;
     private final List<String> creators = new ArrayList<>();
@@ -25,7 +26,8 @@ public class LevelDto {
     private final List<String> tags = new ArrayList<>();
 
     @QueryProjection
-    public LevelDto(String title, Double difficulty, Double minBpm, Double maxBpm, Long tiles, Integer comments, Integer likes) {
+    public LevelDto(Long id, String title, Double difficulty, Double minBpm, Double maxBpm, Long tiles, Integer comments, Integer likes) {
+        this.id = id;
         this.title = title;
         this.difficulty = difficulty;
         this.minBpm = minBpm;
