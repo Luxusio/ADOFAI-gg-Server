@@ -21,6 +21,9 @@ public class LevelSearchCondition {
     private Long minTiles;
     private Long maxTiles;
 
+    private Boolean showNotVerified;
+    private Boolean showCensored;
+
     private List<String> tags;
 
 }

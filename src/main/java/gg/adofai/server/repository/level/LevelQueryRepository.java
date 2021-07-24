@@ -36,7 +36,9 @@ public class LevelQueryRepository {
                         level.tile, level.comments, level.likes))
                 .from(level)
                 .leftJoin(level.song, song)
-                .where(levelQueryExpr(condition.getQuery()),
+                .where(level.isDeleted.eq(false),
+                        levelQueryExpr(condition.getQuery()),
+                        showSpecialLevel(condition.getShowNotVerified(), condition.getShowCensored()),
                         valueBetween(level.difficulty, condition.getMinDifficulty(), condition.getMaxDifficulty()),
                         valueBetween(song.minBpm, song.maxBpm, condition.getMinBpm(), condition.getMaxBpm()),
                         valueBetween(level.tile, condition.getMinTiles(), condition.getMaxTiles()),
@@ -78,6 +80,29 @@ public class LevelQueryRepository {
                         .join(song.artists, songArtist)
                         .join(songArtist.person, person)
                         .where(person.name.like("%" + query + "%"))));
+        return builder;
+    }
+
+    private BooleanBuilder showSpecialLevel(Boolean showNotVerified, Boolean showCensored) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (showNotVerified == null) showNotVerified = false;
+        if (showCensored == null) showCensored = false;
+
+        if (showNotVerified || showCensored) {
+            if (showNotVerified) {
+                builder.or(level.difficulty.gt(0)
+                        .or(level.isCensored.isFalse()));
+            }
+            if (showCensored) {
+                builder.or(level.difficulty.gt(0)
+                        .or(level.isCensored.isTrue()));
+            }
+        }
+        else {
+            builder.and(level.difficulty.gt(0));
+        }
+
         return builder;
     }
 
