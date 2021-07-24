@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity @Table(name = "tags", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "location", "locationId", "tag_id" })
+        @UniqueConstraint(columnNames = { "locationId", "tag_id" })
 })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
