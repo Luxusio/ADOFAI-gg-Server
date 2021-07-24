@@ -10,35 +10,31 @@ import gg.adofai.server.repository.*;
 import gg.adofai.server.service.forum.dto.ForumLevelDto;
 import gg.adofai.server.service.forum.dto.ForumPlayLogDto;
 import gg.adofai.server.service.forum.dto.ForumTagDto;
-import org.hibernate.jpa.spi.TupleBuilderTransformer;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
-import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
-import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
-import javax.persistence.Tuple;
-import javax.validation.UnexpectedTypeException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static gg.adofai.server.service.forum.PrimaryTypeConverter.safeInteger;
 import static gg.adofai.server.service.forum.PrimaryTypeConverter.safeValue;
+import static java.util.Collections.max;
 
 @Service
 @Transactional
@@ -180,7 +176,7 @@ public class ForumService {
 
     @NotNull
     private Map<Long, Level> toLevelMap(List<ForumLevelDto> levelDtoList, Map<String, Song> songMap, Map<String, String> nameConvertMap, Map<String, Person> personMap) {
-        return levelDtoList.stream().map(forumLevelDto -> {
+        Map<Long, Level> levelMap = levelDtoList.stream().map(forumLevelDto -> {
             Song song = songMap.get(Song.getNameWithArtists(
                     safeValue(forumLevelDto.getSong(), ""), forumLevelDto.getArtists()));
             List<Person> levelCreators = forumLevelDto.getCreators().stream()
@@ -199,6 +195,15 @@ public class ForumService {
                     forumLevelDto.getWorkshop(), isCensored, false, LocalDateTime.now(),
                     LocalDateTime.now(), 0, 0, 0, 0, levelCreators);
         }).collect(Collectors.toMap(Level::getId, l->l));
+
+        LongStream.range(1, max(levelMap.keySet()) + 1)
+                .forEach(i -> {
+                    if(!levelMap.containsKey(i)) {
+                        levelMap.put(i, Level.createDeletedLevel(i));
+                    }
+                });
+
+        return levelMap;
     }
 
     @NotNull
