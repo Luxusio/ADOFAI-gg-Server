@@ -2,6 +2,7 @@ package gg.adofai.server.repository;
 
 import gg.adofai.server.GlobalPropertySource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,30 +26,20 @@ public class InitRepository {
         List<String> tables = em.createNativeQuery("SELECT table_name FROM information_schema.tables" +
                 " where table_schema=?;")
                 .setParameter(1, databaseName).getResultList();
+
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
         for (String table: tables) {
-            em.createNativeQuery(
-                    "TRUNCATE TABLE ?.?;\n" +
-                    "ALTER TABLE ? AUTO_INCREMENT = 0;")
-                    .setParameter(1, databaseName)
-                    .setParameter(2, table)
-                    .setParameter(3, table)
-                    .getFirstResult();
+            if (!table.equals("hibernate_sequence")) {
+                em.createNativeQuery("TRUNCATE TABLE " + table + ";")
+                        .executeUpdate();
+            }
+
+            em.createNativeQuery("ALTER TABLE " + table + " AUTO_INCREMENT = 0;")
+                    .executeUpdate();
         }
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1;").executeUpdate();
         System.out.println("tables = " + String.join(", ", tables));
 
-//        Query results = em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;\n" +
-//                "\n" +
-//                "SELECT @str \\:= CONCAT('TRUNCATE TABLE ', table_schema, '.', TABLE_NAME, ';')\n" +
-//                "  FROM information_schema.tables\n" +
-//                "  WHERE table_type   = 'BASE TABLE'\n" +
-//                "  AND table_schema IN ('" + databaseName + "');\n" +
-//                "\n" +
-//                "PREPARE stmt FROM @str;\n" +
-//                "EXECUTE stmt;\n" +
-//                "DEALLOCATE PREPARE stmt;\n" +
-//                "\n" +
-//                "SET FOREIGN_KEY_CHECKS = 1;").setMaxResults(0);
-//        System.out.println("results = " + results);
     }
 
 }
