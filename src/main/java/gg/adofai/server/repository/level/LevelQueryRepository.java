@@ -35,7 +35,7 @@ public class LevelQueryRepository {
                         level.id, level.title, level.difficulty, song.minBpm, song.maxBpm,
                         level.tile, level.comments, level.likes))
                 .from(level)
-                .join(level.song, song)
+                .leftJoin(level.song, song)
                 .where(levelQueryExpr(condition.getQuery()),
                         valueBetween(level.difficulty, condition.getMinDifficulty(), condition.getMaxDifficulty()),
                         valueBetween(song.minBpm, song.maxBpm, condition.getMinBpm(), condition.getMaxBpm()),
