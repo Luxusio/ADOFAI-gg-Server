@@ -2,15 +2,10 @@ package gg.adofai.server.repository.level;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gg.adofai.server.domain.entity.level.QLevel;
-import gg.adofai.server.domain.entity.level.QLevelCreator;
-import gg.adofai.server.domain.entity.level.QSong;
-import gg.adofai.server.domain.entity.level.QSongArtist;
-import gg.adofai.server.domain.entity.member.QPerson;
 import gg.adofai.server.dto.level.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -102,6 +97,7 @@ public class LevelQueryRepository {
     }
 
     private BooleanBuilder hasTagsExpr(List<String> tagsCond) {
+        if (tagsCond == null) return null;
         BooleanBuilder builder = new BooleanBuilder();
         for (String tagCond : tagsCond) {
             builder.and(level.id.in(
@@ -122,25 +118,27 @@ public class LevelQueryRepository {
     }
 
     private Map<Long, List<LevelCreatorDto>> getCreatorMap(List<Long> levelIdList) {
+        QLevel sl = new QLevel("sl");
         return queryFactory
-                .select(new QLevelCreatorDto(level.id, person.name))
+                .select(new QLevelCreatorDto(sl.id, person.name))
                 .from(levelCreator)
-                .join(levelCreator.level, level)
+                .join(levelCreator.level, sl)
                 .join(levelCreator.person, person)
-                .where(level.id.in(levelIdList))
+                .where(sl.id.in(levelIdList))
                 .fetch().stream()
                 .collect(Collectors.groupingBy(LevelCreatorDto::getLevelId));
     }
 
 
     private Map<Long, List<LevelTagsDto>> getTagsMap(List<Long> levelIdList) {
+        QLevel sl = new QLevel("sl");
         return queryFactory
-                .select(new QLevelTagsDto(level.id, person.name))
+                .select(new QLevelTagsDto(sl.id, tag.name))
                 .from(tags)
-                .innerJoin(level).on(tags.locationId.eq(level.id))
+                .join(sl).on(tags.locationId.eq(sl.id))
                 .join(tags.tag, tag)
                 .where(tag.location.eq("Level"),
-                        level.id.in(levelIdList))
+                        sl.id.in(levelIdList))
                 .fetch().stream()
                 .collect(Collectors.groupingBy(LevelTagsDto::getLevelId));
     }
