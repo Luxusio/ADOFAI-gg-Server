@@ -1,5 +1,6 @@
 package gg.adofai.server;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 @Configuration
@@ -16,6 +18,11 @@ import javax.sql.DataSource;
 public class DatabaseConfig {
 
     private final GlobalPropertySource globalPropertySource;
+
+    @Bean
+    public JPAQueryFactory jpaQueryFactoryBean(EntityManager em) {
+        return new JPAQueryFactory(em);
+    }
 
     @Bean
     @Primary
