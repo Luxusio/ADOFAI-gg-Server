@@ -104,4 +104,9 @@ public class Level {
         return level;
     }
 
+    public static Level createDeletedLevel(Long id) {
+        return createLevel(id, null, "", "", 0.0, 0.0, 0L, false, "", "", null, true, true,
+                LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of());
+    }
+
 }
