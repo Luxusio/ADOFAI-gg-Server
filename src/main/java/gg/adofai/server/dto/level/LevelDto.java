@@ -39,6 +39,7 @@ public class LevelDto {
     }
 
     public void setCreators(List<LevelCreatorDto> creators) {
+        if (creators == null) return;
         this.creators.clear();
         this.creators.addAll(creators.stream()
                 .map(LevelCreatorDto::getName)
@@ -46,6 +47,7 @@ public class LevelDto {
     }
 
     public void setTags(List<LevelTagsDto> tags) {
+        if (tags == null) return;
         this.tags.clear();
         this.tags.addAll(tags.stream()
                 .map(LevelTagsDto::getName)
