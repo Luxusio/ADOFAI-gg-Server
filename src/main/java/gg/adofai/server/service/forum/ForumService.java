@@ -160,14 +160,14 @@ public class ForumService {
     @NotNull
     private Map<String, Song> toSongMap(List<ForumLevelDto> levelDtoList, Map<String, String> nameConvertMap, Map<String, Person> personMap) {
         return levelDtoList.stream()
-                .collect(Collectors.groupingBy(dto-> Song.getNameWithArtists(dto.getSong(), dto.getArtists()))).entrySet().stream()
-                .map(listEntry -> {
-                    String song = safeValue(listEntry.getKey(), "");
-                    ForumLevelDto forumLevelDto = listEntry.getValue().get(0);
+                .collect(Collectors.groupingBy(dto-> Song.getNameWithArtists(dto.getSong(), dto.getArtists()))).values().stream()
+                .map(forumLevelDtoList -> {
+                    ForumLevelDto forumLevelDto = forumLevelDtoList.get(0);
+                    String song = safeValue(forumLevelDto.getSong(), "");
 
                     Double minBpm = safeValue(forumLevelDto.getMinBpm(), 0.0);
                     Double maxBpm = safeValue(forumLevelDto.getMaxBpm(), 0.0);
-                    List<Person> artists = listEntry.getValue().stream()
+                    List<Person> artists = forumLevelDtoList.stream()
                             .flatMap(dto -> dto.getArtists().stream())
                             .map(name -> nameConvertMap.get(name.toLowerCase()))
                             .distinct().map(personMap::get).collect(Collectors.toList());
