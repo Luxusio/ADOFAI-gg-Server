@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
@@ -22,8 +21,6 @@ public class Tags {
     @Column(name = "tags_id")
     private Long id;
 
-    @NotEmpty private String location;
-
     @NotNull private Long locationId;
 
     @ManyToOne(fetch = LAZY)
@@ -33,7 +30,6 @@ public class Tags {
     public static Tags createTags(Tag tag, Long locationId) {
         Tags tags = new Tags();
         tags.tag = tag;
-        tags.location = tag.getType();
         tags.locationId = locationId;
 
         return tags;
