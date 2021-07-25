@@ -2,7 +2,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate # Be careful when use create(default validate).
     properties:
       hibernate:
         format_sql: true
