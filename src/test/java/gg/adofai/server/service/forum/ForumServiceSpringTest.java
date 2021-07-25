@@ -32,7 +32,6 @@ public class ForumServiceSpringTest {
         List<Person> personList = personRepository.findAll();
         assertNotEquals(0, personList.size());
 
-        System.out.println("personList = " + personList);
     }
 
 

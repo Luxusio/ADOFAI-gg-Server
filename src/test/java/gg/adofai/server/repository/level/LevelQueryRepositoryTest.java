@@ -196,11 +196,11 @@ class LevelQueryRepositoryTest {
                 "min bpm should be equal or higher than 200"));
 
         assertNotEquals(0, resultDto3.getCount());
-        resultDto2.getResults().forEach(levelDto -> {
+        resultDto3.getResults().forEach(levelDto -> {
             assertEquals(200, levelDto.getMinBpm(),
-                    "min bpm should be equal to 200");
+                    "min bpm should be equal to 200 (" + levelDto + ")");
             assertEquals(200, levelDto.getMaxBpm(),
-                    "max bpm should be equal to 200");
+                    "max bpm should be equal to 200 (" + levelDto + ")");
         });
     }
 
