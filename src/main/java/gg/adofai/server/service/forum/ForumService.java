@@ -10,7 +10,6 @@ import gg.adofai.server.repository.*;
 import gg.adofai.server.service.forum.dto.ForumLevelDto;
 import gg.adofai.server.service.forum.dto.ForumPlayLogDto;
 import gg.adofai.server.service.forum.dto.ForumTagDto;
-import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
