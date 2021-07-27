@@ -1,6 +1,5 @@
-package gg.adofai.server.dto.level;
+package gg.adofai.server.domain.vo.level;
 
-import gg.adofai.server.domain.vo.LevelSortOrder;
 import lombok.Data;
 
 import java.util.List;

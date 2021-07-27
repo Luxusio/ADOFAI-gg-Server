@@ -1,8 +1,7 @@
 package gg.adofai.server.domain.converter;
 
-import gg.adofai.server.domain.vo.LevelSortOrder;
+import gg.adofai.server.domain.vo.level.LevelSortOrder;
 import org.springframework.core.convert.converter.Converter;
-import reactor.util.annotation.NonNullApi;
 
 public class LevelSortOrderConverter implements Converter<String, LevelSortOrder> {
     @Override

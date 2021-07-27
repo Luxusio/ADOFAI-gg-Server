@@ -6,7 +6,7 @@ import gg.adofai.server.domain.entity.level.Song;
 import gg.adofai.server.domain.entity.member.Person;
 import gg.adofai.server.domain.entity.tag.Tag;
 import gg.adofai.server.domain.entity.tag.Tags;
-import gg.adofai.server.dto.level.LevelSearchCondition;
+import gg.adofai.server.domain.vo.level.LevelSearchCondition;
 import gg.adofai.server.dto.level.LevelSearchResultDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

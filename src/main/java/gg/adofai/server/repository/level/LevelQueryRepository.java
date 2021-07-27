@@ -6,6 +6,7 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gg.adofai.server.domain.entity.level.QLevel;
+import gg.adofai.server.domain.vo.level.LevelSearchCondition;
 import gg.adofai.server.dto.level.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

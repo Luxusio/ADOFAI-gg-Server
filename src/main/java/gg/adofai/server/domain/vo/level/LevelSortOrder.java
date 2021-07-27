@@ -1,4 +1,4 @@
-package gg.adofai.server.domain.vo;
+package gg.adofai.server.domain.vo.level;
 
 public enum LevelSortOrder {
     LIKE_DESC,
