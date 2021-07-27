@@ -21,7 +21,6 @@ public class ForumServiceSpringTest {
     @Autowired PersonRepository personRepository;
 
     @Test
-    @Commit
     void testInitDatabase() {
         // given
 

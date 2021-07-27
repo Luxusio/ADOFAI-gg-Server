@@ -2,10 +2,10 @@ package gg.adofai.server.repository.level;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gg.adofai.server.domain.entity.level.Level;
-import gg.adofai.server.domain.entity.level.QLevel;
 import gg.adofai.server.domain.entity.level.Song;
 import gg.adofai.server.domain.entity.member.Person;
-import gg.adofai.server.dto.level.LevelDto;
+import gg.adofai.server.domain.entity.tag.Tag;
+import gg.adofai.server.domain.entity.tag.Tags;
 import gg.adofai.server.dto.level.LevelSearchCondition;
 import gg.adofai.server.dto.level.LevelSearchResultDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static gg.adofai.server.domain.entity.level.QLevel.level;
+import static gg.adofai.server.domain.entity.tag.QTag.tag;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -32,7 +31,7 @@ class LevelQueryRepositoryTest {
     @Autowired
     JPAQueryFactory queryFactory;
 
-    //@BeforeEach
+    @BeforeEach
     void initDatabase() {
         Person camellia = Person.createPerson("camellia");
         Person plum = Person.createPerson("plum");
@@ -42,6 +41,7 @@ class LevelQueryRepositoryTest {
         Person bWen = Person.createPerson("BWen");
         Person herny = Person.createPerson("herny");
         Person optimum_p = Person.createPerson("Optimum_P");
+        Person hyun = Person.createPerson("Hyun");
 
         em.persist(camellia);
         em.persist(plum);
@@ -49,11 +49,13 @@ class LevelQueryRepositoryTest {
         em.persist(xiZnYng);
         em.persist(bWen);
         em.persist(herny);
+        em.persist(optimum_p);
+        em.persist(hyun);
 
         Song ns = Song.createSong("[ns]", 222.5, 266.0, List.of(camellia));
         Song secretBoss = Song.createSong("SECRET BOSS", 220.0, 220.0, List.of(camellia));
         Song killerBeast = Song.createSong("KillerBeast", 160.0, 220.0, List.of(camellia));
-
+        Song tripleCross = Song.createSong("Triple Cross", 200.0, 200.0, List.of(hyun));
         Song r = Song.createSong("R", 180.0, 180.0, List.of(plum));
         Song timeline = Song.createSong("timeline", 180.0, 180.0, List.of(plum));
         Song selfmadeDisaster = Song.createSong("Selfmade Disaster", 180.0, 180.0, List.of(plum));
@@ -64,22 +66,27 @@ class LevelQueryRepositoryTest {
         em.persist(r);
         em.persist(timeline);
         em.persist(selfmadeDisaster);
+        em.persist(tripleCross);
 
-        Level levelNs = Level.createLevel(1L, ns, "[ns]", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
+        Level levelNs = Level.createLevel(1L, ns, "[ns]", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(ruren));
-        Level levelSecretBoss = Level.createLevel(2L, secretBoss, "SECRET BOSS", "", 18.0, 2.5, 0L, false, "", "", null, false, false,
+        Level levelSecretBoss = Level.createLevel(2L, secretBoss, "SECRET BOSS", "", 18.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(optimum_p));
-        Level levelSecretBossEx = Level.createLevel(3L, secretBoss, "SECRET BOSS (ex)", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
+        Level levelSecretBossEx = Level.createLevel(3L, secretBoss, "SECRET BOSS (ex)", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(xiZnYng));
-        Level levelR = Level.createLevel(4L, r, "R", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
+        Level levelR = Level.createLevel(4L, r, "R", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelKillerBeast = Level.createLevel(5L, killerBeast, "KillerBeast", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
+        Level levelKillerBeast = Level.createLevel(5L, killerBeast, "KillerBeast", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelSelfmadeDisaster = Level.createLevel(6L, selfmadeDisaster, "Selfmade Disaster (Hyper ver)", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
+        Level levelSelfmadeDisaster = Level.createLevel(6L, selfmadeDisaster, "Selfmade Disaster (Hyper ver)", "", 21.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelSelfmadeDisasterEasy = Level.createLevel(7L, selfmadeDisaster, "Selfmade Disaster (easy ver)", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
+        Level levelSelfmadeDisasterEasy = Level.createLevel(7L, selfmadeDisaster, "Selfmade Disaster (easy ver)", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelTimeline = Level.createLevel(8L, timeline, "timeline", "", 20.0, 2.5, 0L, false, "", "", null, false, false,
+        Level levelTimeline = Level.createLevel(8L, timeline, "timeline", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
+                LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(herny));
+        Level levelTripleCross = Level.createLevel(9L, tripleCross, "triple cross", "", 18.0, 2.5, 0L, false, " ", " ", null, false, false,
+                LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(herny));
+        Level levelTripleCrossExtremelyEasy = Level.createLevel(10L, tripleCross, "triple cross", "", 1.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(herny));
 
         em.persist(levelNs);
@@ -90,27 +97,39 @@ class LevelQueryRepositoryTest {
         em.persist(levelSelfmadeDisaster);
         em.persist(levelSelfmadeDisasterEasy);
         em.persist(levelTimeline);
+        em.persist(levelTripleCross);
+        em.persist(levelTripleCrossExtremelyEasy);
 
+        List.of("개인차", "동시치기", "2+동타", "셋잇단", "다섯잇단", "일곱잇단", "폴리리듬", "스윙", "트레실로", "개박",
+                "64+비트", "가감속", "질주", "마법진", "암기", "1분이하", "4분이상", "흰토끼", "배속변경X", "소용돌이X")
+                .forEach(tagName->em.persist(Tag.createTag(Level.class, tagName, 0L)));
+
+        autoPersistTags(levelNs, "개박", "암기");
+        autoPersistTags(levelSecretBoss, "개인차", "암기", "동시치기");
+        autoPersistTags(levelSecretBossEx, "암기", "동시치기", "4분이상");
+        autoPersistTags(levelR, "셋잇단", "마법진");
+        autoPersistTags(levelKillerBeast, "암기", "질주", "동시치기", "셋잇단", "폴리리듬");
+        autoPersistTags(levelSelfmadeDisaster, "질주", "마법진", "64+비트");
+        autoPersistTags(levelSelfmadeDisasterEasy, "질주");
+        autoPersistTags(levelTimeline, "동시치기", "2+동타", "마법진");
+        autoPersistTags(levelTripleCross, "질주");
     }
+
+    private void autoPersistTags(Level level, String... args) {
+        long levelId = level.getId();
+        queryFactory.selectFrom(tag)
+                .where(tag.name.in(args))
+                .fetch().stream()
+                .map(resultTag -> Tags.createTags(resultTag, levelId))
+                .forEach(em::persist);
+    }
+
 
     private LevelSearchCondition createBaseSearchCondition() {
         LevelSearchCondition condition = new LevelSearchCondition();
         condition.setOffset(0L);
         condition.setAmount(50L);
         return condition;
-    }
-
-    @Test
-    void testSearchData() {
-        LevelSearchCondition condition = createBaseSearchCondition();
-        condition.setTags(List.of("동시치기"));
-
-        LevelSearchResultDto resultDto = levelQueryRepository.searchLevel(condition);
-
-        System.out.println("resultDto.count = " + resultDto.getCount());
-        for (LevelDto result : resultDto.getResults()) {
-            System.out.println("result = " + result);
-        }
     }
 
     @Test
@@ -165,12 +184,12 @@ class LevelQueryRepositoryTest {
     @Test
     void testSearchByOffsetAmount() {
         LevelSearchCondition condition = createBaseSearchCondition();
-        condition.setOffset(50L);
-        condition.setAmount(50L);
+        condition.setOffset(5L);
+        condition.setAmount(4L);
 
         LevelSearchResultDto resultDto = levelQueryRepository.searchLevel(condition);
         assertNotEquals(0, resultDto.getCount());
-        assertEquals(50, resultDto.getResults().size());
+        assertEquals(4, resultDto.getResults().size());
     }
 
     @Test
