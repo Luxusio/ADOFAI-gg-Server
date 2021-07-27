@@ -1,5 +1,6 @@
 package gg.adofai.server.dto.level;
 
+import gg.adofai.server.domain.vo.LevelSortOrder;
 import lombok.Data;
 
 import java.util.List;
@@ -11,6 +12,8 @@ public class LevelSearchCondition {
     private Long amount;
 
     private String query;
+
+    private LevelSortOrder sort;
 
     private Double minDifficulty;
     private Double maxDifficulty;
