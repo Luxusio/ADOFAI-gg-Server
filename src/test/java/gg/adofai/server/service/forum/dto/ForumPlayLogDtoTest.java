@@ -24,7 +24,7 @@ class ForumPlayLogDtoTest {
         // then
         assertNotNull(dto);
         assertEquals(1, dto.getId());
-        assertEquals(LocalDateTime.of(2021, 2, 21, 22, 47, 8), dto.getTimeStamp());
+        assertEquals(LocalDateTime.of(2021, 3, 21, 22, 47, 8), dto.getTimeStamp());
         assertEquals("유수찬", dto.getName());
         assertEquals(1, dto.getUserCode());
         assertEquals(330, dto.getMapId());
