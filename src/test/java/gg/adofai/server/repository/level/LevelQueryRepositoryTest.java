@@ -34,13 +34,13 @@ class LevelQueryRepositoryTest {
 
     @BeforeEach
     void initDatabase() {
-        Person camellia = Person.createPerson("camellia");
-        Person plum = Person.createPerson("plum");
+        Person camellia = Person.createPerson("Camellia");
+        Person plum = Person.createPerson("Plum");
 
         Person ruren = Person.createPerson("Ruren");
         Person xiZnYng = Person.createPerson("XiZnYng");
         Person bWen = Person.createPerson("BWen");
-        Person herny = Person.createPerson("herny");
+        Person herny = Person.createPerson("Herny");
         Person optimum_p = Person.createPerson("Optimum_P");
         Person hyun = Person.createPerson("Hyun");
 
@@ -148,9 +148,9 @@ class LevelQueryRepositoryTest {
         LevelSearchCondition condition = createBaseSearchCondition();
         condition.setQuery("Camellia");
         LevelSearchCondition condition2 = createBaseSearchCondition();
-        condition2.setQuery("secret boss");
+        condition2.setQuery("SECRET BOSS");
         LevelSearchCondition condition3 = createBaseSearchCondition();
-        condition3.setQuery("bWen");
+        condition3.setQuery("BWen");
 
         LevelSearchResultDto resultDto = levelQueryRepository.searchLevel(condition);
         LevelSearchResultDto resultDto2 = levelQueryRepository.searchLevel(condition2);
