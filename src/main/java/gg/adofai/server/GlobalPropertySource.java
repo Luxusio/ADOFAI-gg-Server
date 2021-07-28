@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySources;
 @Configuration
 @PropertySources({
         @PropertySource(value = "file:./config/config.properties", ignoreResourceNotFound = true), // developer pc
-        @PropertySource(value = "file:${user.home}/env/config.properties", ignoreResourceNotFound = true), // server
+        @PropertySource(value = "file:/home/adofai/env/config.properties", ignoreResourceNotFound = true), // server
 })
 @Getter
 public class GlobalPropertySource {
