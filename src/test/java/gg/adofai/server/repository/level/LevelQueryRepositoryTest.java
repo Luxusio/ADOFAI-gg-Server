@@ -7,6 +7,7 @@ import gg.adofai.server.domain.entity.member.Person;
 import gg.adofai.server.domain.entity.tag.Tag;
 import gg.adofai.server.domain.entity.tag.Tags;
 import gg.adofai.server.domain.vo.level.LevelSearchCondition;
+import gg.adofai.server.domain.vo.level.LevelSortOrder;
 import gg.adofai.server.dto.level.LevelSearchResultDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -223,5 +224,18 @@ class LevelQueryRepositoryTest {
         });
     }
 
+    @Test
+    void testSearchOrder() {
+        LevelSearchCondition condition = createBaseSearchCondition();
+        condition.setSort(LevelSortOrder.DIFFICULTY_DESC);
+        LevelSearchCondition condition2 = createBaseSearchCondition();
+        condition2.setSort(LevelSortOrder.RECENT_DESC);
+
+        LevelSearchResultDto resultDto = levelQueryRepository.searchLevel(condition);
+        LevelSearchResultDto resultDto2 = levelQueryRepository.searchLevel(condition2);
+
+        assertEquals(21, resultDto.getResults().get(0).getDifficulty(), "hardest level is 21");
+        assertEquals(10, resultDto2.getResults().get(0).getId(), "recent level's id is 10");
+    }
 
 }

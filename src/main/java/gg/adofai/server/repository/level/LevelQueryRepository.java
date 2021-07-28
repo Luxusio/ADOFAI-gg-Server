@@ -2,11 +2,13 @@ package gg.adofai.server.repository.level;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import gg.adofai.server.domain.entity.level.QLevel;
 import gg.adofai.server.domain.vo.level.LevelSearchCondition;
+import gg.adofai.server.domain.vo.level.LevelSortOrder;
 import gg.adofai.server.dto.level.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -44,6 +46,7 @@ public class LevelQueryRepository {
                         valueBetween(song.minBpm, song.maxBpm, condition.getMinBpm(), condition.getMaxBpm()),
                         valueBetween(level.tile, condition.getMinTiles(), condition.getMaxTiles()),
                         hasTagsExpr(condition.getTags()))
+                .orderBy(bySortOrder(condition.getSort()))
                 .offset(condition.getOffset())
                 .limit(condition.getAmount())
                 .fetchResults();
@@ -59,6 +62,28 @@ public class LevelQueryRepository {
         levelDtoList.forEach(dto-> dto.setTags(tagsMap.get(dto.getId())));
 
         return new LevelSearchResultDto(levelDtoList, total);
+    }
+
+    @SuppressWarnings("rawtypes")
+    public OrderSpecifier bySortOrder(LevelSortOrder levelSortOrder) {
+        if (levelSortOrder == null) return level.id.asc();
+
+        switch (levelSortOrder) {
+            case RECENT_ASC:
+                return level.id.asc();
+            case RECENT_DESC:
+                return level.id.desc();
+            case LIKE_ASC:
+                return level.likes.asc();
+            case LIKE_DESC:
+                return level.likes.desc();
+            case DIFFICULTY_ASC:
+                return level.difficulty.asc();
+            case DIFFICULTY_DESC:
+                return level.difficulty.desc();
+        }
+
+        return null;
     }
 
     public BooleanBuilder levelQueryExpr(String query) {
