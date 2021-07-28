@@ -43,6 +43,7 @@ dependencies {
 
 	testImplementation 'systems.manifold:manifold-ext-rt:2021.1.14'
 	testAnnotationProcessor 'systems.manifold:manifold-ext:2021.1.14'
+	testImplementation 'com.h2database:h2'
 	//testAnnotationProcessor 'systems.manifold:manifold-all:2021.1.14'
 
 }
