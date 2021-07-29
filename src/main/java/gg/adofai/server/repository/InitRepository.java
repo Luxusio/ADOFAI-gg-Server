@@ -38,6 +38,9 @@ public class InitRepository {
         }
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1;").executeUpdate();
 
+        em.flush();
+        em.clear();
+
     }
 
 }
