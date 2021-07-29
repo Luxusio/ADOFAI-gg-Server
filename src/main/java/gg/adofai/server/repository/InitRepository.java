@@ -1,7 +1,6 @@
 package gg.adofai.server.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -37,6 +36,9 @@ public class InitRepository {
             if (!isTesting) em.createNativeQuery("ALTER TABLE " + table + " AUTO_INCREMENT = 0;").executeUpdate();
         }
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1;").executeUpdate();
+
+        em.flush();
+        em.clear();
 
     }
 

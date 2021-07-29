@@ -40,3 +40,4 @@ out/
 ### User defined ###
 # Config file
 /config/
+.jpb
