@@ -9,10 +9,12 @@ import gg.adofai.server.domain.entity.tag.Tags;
 import gg.adofai.server.domain.vo.level.LevelSearchCondition;
 import gg.adofai.server.domain.vo.level.LevelSortOrder;
 import gg.adofai.server.dto.level.LevelSearchResultDto;
+import gg.adofai.server.repository.InitRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -27,13 +29,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class LevelQueryRepositoryTest {
 
     @Autowired LevelQueryRepository levelQueryRepository;
-    @Autowired
-    EntityManager em;
-    @Autowired
-    JPAQueryFactory queryFactory;
+    @Autowired EntityManager em;
+    @Autowired JPAQueryFactory queryFactory;
+    @Autowired InitRepository initRepository;
 
     @BeforeEach
     void initDatabase() {
+        initRepository.setTesting(true);
+        initRepository.resetDB();
+        
         Person camellia = Person.createPerson("Camellia");
         Person plum = Person.createPerson("Plum");
 
