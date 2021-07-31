@@ -117,6 +117,9 @@ class LevelQueryRepositoryTest {
         autoPersistTags(levelSelfmadeDisasterEasy, "질주");
         autoPersistTags(levelTimeline, "동시치기", "2+동타", "마법진");
         autoPersistTags(levelTripleCross, "질주");
+
+        em.flush();
+        em.clear();
     }
 
     private void autoPersistTags(Level level, String... args) {
