@@ -19,11 +19,20 @@ public class InitRepository {
     }
 
     // https://stackoverflow.com/questions/1912813/truncate-all-tables-in-a-mysql-database-in-one-command
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void resetDB() {
 
-        List<Object[]> resultList = em.createNativeQuery("SHOW TABLES;").getResultList();
-        List<String> tables = resultList.stream().map(objects->objects[0].toString()).collect(Collectors.toList());
+        List resultList = em.createNativeQuery("SHOW TABLES;").getResultList();
+        List<String> tables;
+        if (resultList.get(0) instanceof String) {
+            tables = (List<String>) resultList;
+        }
+        else {
+            tables = ((List<Object[]>)resultList).stream()
+                    .map(objects -> objects[0].toString())
+                    .collect(Collectors.toList());
+        }
+
 
         System.out.println("tables = " + String.join(", ", tables));
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
