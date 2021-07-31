@@ -17,7 +17,7 @@ public class Likes {
     @Column(name = "likes_id")
     private Long id;
 
-    @NotEmpty private String location;
+    @NotNull @NotEmpty private String location;
 
     @NotNull private Long locationId;
 

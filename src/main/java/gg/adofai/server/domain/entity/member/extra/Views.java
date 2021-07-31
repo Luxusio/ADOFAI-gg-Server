@@ -18,7 +18,7 @@ public class Views {
     @Column(name = "views_id")
     private Long id;
 
-    @NotEmpty private String location;
+    @NotNull @NotEmpty private String location;
 
     @NotNull private Long locationId;
 

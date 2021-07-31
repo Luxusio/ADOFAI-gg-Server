@@ -23,9 +23,9 @@ public class Member {
     @JoinColumn(name = "person_id")
     @NotNull private Person person;
 
-    @NotEmpty private String loginId;
+    @NotNull @NotEmpty private String loginId;
 
-    @NotEmpty private String loginPassword;
+    @NotNull @NotEmpty private String loginPassword;
 
     @NotNull private String description;
 

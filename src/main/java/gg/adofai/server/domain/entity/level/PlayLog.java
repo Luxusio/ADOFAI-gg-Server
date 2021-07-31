@@ -35,7 +35,7 @@ public class PlayLog {
 
     @NotNull private Double playPoint;
 
-    @NotEmpty private String url;
+    @NotNull @NotEmpty private String url;
 
     @NotNull private String description;
 

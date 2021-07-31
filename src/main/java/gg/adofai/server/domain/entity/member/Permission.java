@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity @Table(name = "permission")
 @Getter
@@ -13,6 +14,6 @@ public class Permission {
     @Column(name = "permission_id")
     private Long id;
 
-    @NotEmpty private String name;
+    @NotNull @NotEmpty private String name;
 
 }

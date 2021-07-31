@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Level {
 
-    @Id //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "level_id")
     private Long id;
 
@@ -43,10 +43,10 @@ public class Level {
     @NotNull private Boolean epilepsyWarning;
 
     @Column(length = 1024)
-    @NotEmpty private String video;
+    @NotNull @NotEmpty private String video;
 
     @Column(length = 1024)
-    @NotEmpty private String file;
+    @NotNull @NotEmpty private String file;
 
     @Column(length = 1024)
     private String workshop;
@@ -69,7 +69,7 @@ public class Level {
 
     // TODO : change max length of strings. for example) length=65536
 
-    @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "level", cascade = CascadeType.ALL)
     private List<LevelCreator> levelCreators = new ArrayList<>();
 
     public static Level createLevel(Long id, Song song, String title, String description, Double difficulty, Double detailDifficulty,

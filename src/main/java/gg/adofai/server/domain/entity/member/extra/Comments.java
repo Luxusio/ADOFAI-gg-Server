@@ -18,7 +18,7 @@ public class Comments {
     @Column(name = "comments_id")
     private Long id;
 
-    @NotEmpty private String location;
+    @NotNull @NotEmpty private String location;
 
     @NotNull private Long locationId;
 
@@ -30,7 +30,7 @@ public class Comments {
     @JoinColumn(name = "parent_id")
     @NotNull private Comments parent;
 
-    @NotEmpty private String text;
+    @NotNull @NotEmpty private String text;
 
     @NotNull private LocalDateTime date;
 
