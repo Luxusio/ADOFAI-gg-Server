@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -59,6 +60,7 @@ public class ForumService {
     private final TagsRepository tagsRepository;
     private final PlayLogRepository playLogRepository;
 
+    private final EntityManager em;
     private final WebClient client;
 
     // Problem : all table uses same auto_increment value. we need to fix it.
@@ -66,7 +68,7 @@ public class ForumService {
     public ForumService(InitRepository initRepository, PersonRepository personRepository, SongRepository songRepository,
                         LevelRepository levelRepository, TagRepository tagRepository, TagsRepository tagsRepository,
                         PlayLogRepository playLogRepository,
-                        WebClient.Builder builder) {
+                        EntityManager em, WebClient.Builder builder) {
         this.initRepository = initRepository;
         this.personRepository = personRepository;
         this.songRepository = songRepository;
@@ -75,10 +77,10 @@ public class ForumService {
         this.tagsRepository = tagsRepository;
         this.playLogRepository = playLogRepository;
 
+        this.em = em;
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configure -> configure.defaultCodecs().maxInMemorySize(-1)).build();
-
-        client = builder.exchangeStrategies(exchangeStrategies)
+        this.client = builder.exchangeStrategies(exchangeStrategies)
                 .baseUrl(BASE_URL).build();
     }
 
@@ -115,6 +117,7 @@ public class ForumService {
         // add song
         Map<String, Song> songMap = toSongMap(levelDtoList, nameConvertMap, personMap);
         songMap.forEach((s, song) -> songRepository.save(song));
+        em.flush();
 
         // add level
         Map<Long, Level> levelMap = toLevelMap(levelDtoList, songMap, nameConvertMap, personMap);
@@ -123,6 +126,7 @@ public class ForumService {
 
         // add level tag
         toTagsStream(levelDtoList, tagMap).forEach(tagsRepository::save);
+        em.flush();
 
         // add play log
         toPlayLogStream(ppWorkDtoList, personMap, nameConvertMap, levelMap).forEach(playLogRepository::save);
