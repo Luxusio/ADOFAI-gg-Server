@@ -72,25 +72,25 @@ class LevelQueryRepositoryTest {
         em.persist(selfmadeDisaster);
         em.persist(tripleCross);
 
-        Level levelNs = Level.createLevel(1L, ns, "[ns]", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelNs = Level.createLevel(null, ns, "[ns]", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(ruren));
-        Level levelSecretBoss = Level.createLevel(2L, secretBoss, "SECRET BOSS", "", 18.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelSecretBoss = Level.createLevel(null, secretBoss, "SECRET BOSS", "", 18.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(optimum_p));
-        Level levelSecretBossEx = Level.createLevel(3L, secretBoss, "SECRET BOSS (ex)", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelSecretBossEx = Level.createLevel(null, secretBoss, "SECRET BOSS (ex)", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(xiZnYng));
-        Level levelR = Level.createLevel(4L, r, "R", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelR = Level.createLevel(null, r, "R", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelKillerBeast = Level.createLevel(5L, killerBeast, "KillerBeast", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelKillerBeast = Level.createLevel(null, killerBeast, "KillerBeast", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelSelfmadeDisaster = Level.createLevel(6L, selfmadeDisaster, "Selfmade Disaster (Hyper ver)", "", 21.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelSelfmadeDisaster = Level.createLevel(null, selfmadeDisaster, "Selfmade Disaster (Hyper ver)", "", 21.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelSelfmadeDisasterEasy = Level.createLevel(7L, selfmadeDisaster, "Selfmade Disaster (easy ver)", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelSelfmadeDisasterEasy = Level.createLevel(null, selfmadeDisaster, "Selfmade Disaster (easy ver)", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(bWen));
-        Level levelTimeline = Level.createLevel(8L, timeline, "timeline", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelTimeline = Level.createLevel(null, timeline, "timeline", "", 20.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(herny));
-        Level levelTripleCross = Level.createLevel(9L, tripleCross, "triple cross", "", 18.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelTripleCross = Level.createLevel(null, tripleCross, "triple cross", "", 18.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(herny));
-        Level levelTripleCrossExtremelyEasy = Level.createLevel(10L, tripleCross, "triple cross", "", 1.0, 2.5, 0L, false, " ", " ", null, false, false,
+        Level levelTripleCrossExtremelyEasy = Level.createLevel(null, tripleCross, "triple cross", "", 1.0, 2.5, 0L, false, " ", " ", null, false, false,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of(herny));
 
         em.persist(levelNs);
