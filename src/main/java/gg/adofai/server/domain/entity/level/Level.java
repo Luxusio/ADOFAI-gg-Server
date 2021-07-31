@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Level {
 
-    @Id //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "level_id")
     private Long id;
 
@@ -43,10 +43,10 @@ public class Level {
     @NotNull private Boolean epilepsyWarning;
 
     @Column(length = 1024)
-    @NotEmpty private String video;
+    @NotNull @NotEmpty private String video;
 
     @Column(length = 1024)
-    @NotEmpty private String file;
+    @NotNull @NotEmpty private String file;
 
     @Column(length = 1024)
     private String workshop;
@@ -69,16 +69,15 @@ public class Level {
 
     // TODO : change max length of strings. for example) length=65536
 
-    @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "level", cascade = CascadeType.ALL)
     private List<LevelCreator> levelCreators = new ArrayList<>();
 
-    public static Level createLevel(Long id, Song song, String title, String description, Double difficulty, Double detailDifficulty,
+    public static Level createLevel(Song song, String title, String description, Double difficulty, Double detailDifficulty,
                  Long tile, Boolean epilepsyWarning, String video, String file, String workshop, Boolean isCensored, Boolean isDeleted,
                  LocalDateTime date, LocalDateTime lastUpdate,
                  Integer look, Integer likes, Integer dislikes, Integer comments, List<Person> levelCreators) {
         Level level = new Level();
 
-        level.id = id;
         level.song = song;
         level.title = title;
         level.description = description;
@@ -104,8 +103,8 @@ public class Level {
         return level;
     }
 
-    public static Level createDeletedLevel(Long id) {
-        return createLevel(id, null, "", "", 0.0, 0.0, 0L, false, "-", "-", null, true, true,
+    public static Level createDeletedLevel() {
+        return createLevel(null, "", "", 0.0, 0.0, 0L, false, "-", "-", null, true, true,
                 LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0, 0, List.of());
     }
 

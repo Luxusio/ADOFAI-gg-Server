@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -18,8 +19,8 @@ public class ProgramFile {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "program_update_id")
-    private ProgramUpdate programUpdate;
+    @NotNull private ProgramUpdate programUpdate;
 
-    @NotEmpty private String url;
+    @NotNull @NotEmpty private String url;
 
 }

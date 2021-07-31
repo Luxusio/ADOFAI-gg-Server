@@ -1,5 +1,6 @@
 package gg.adofai.server.service.forum;
 
+import com.mysema.commons.lang.Pair;
 import gg.adofai.server.domain.entity.level.Level;
 import gg.adofai.server.domain.entity.level.PlayLog;
 import gg.adofai.server.domain.entity.level.Song;
@@ -117,7 +118,8 @@ public class ForumService {
 
         // add level
         Map<Long, Level> levelMap = toLevelMap(levelDtoList, songMap, nameConvertMap, personMap);
-        levelMap.forEach((id, level) -> levelRepository.save(level));
+        LongStream.range(1, max(levelMap.keySet()) + 1)
+                        .forEachOrdered(value -> levelRepository.save(levelMap.get(value)));
 
         // add level tag
         toTagsStream(levelDtoList, tagMap).forEach(tagsRepository::save);
@@ -187,21 +189,19 @@ public class ForumService {
                     forumLevelDto.getLevel();
             boolean isCensored = forumLevelDto.getLevel() == -2;
 
-            return Level.createLevel(
-                    forumLevelDto.getId(), song, forumLevelDto.getSong(), "", difficulty,
+            return Pair.of(forumLevelDto.getId(), Level.createLevel(
+                     song, forumLevelDto.getSong(), "", difficulty,
                     0.0, safeValue(forumLevelDto.getTiles(), 0L), forumLevelDto.getEpilepsyWarning(),
                     safeValue(forumLevelDto.getVideo(), " "),
                     safeValue(forumLevelDto.getDownload(), " "),
                     forumLevelDto.getWorkshop(), isCensored, false, LocalDateTime.now(),
-                    LocalDateTime.now(), 0, 0, 0, 0, levelCreators);
-        }).collect(Collectors.toMap(Level::getId, l->l));
+                    LocalDateTime.now(), 0, 0, 0, 0, levelCreators));
+        }).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
 
         LongStream.range(1, max(levelMap.keySet()) + 1)
-                .forEach(i -> {
-                    if(!levelMap.containsKey(i)) {
-                        levelMap.put(i, Level.createDeletedLevel(i));
-                    }
-                });
+                .forEach(i -> { if (!levelMap.containsKey(i)) {
+                        levelMap.put(i, Level.createDeletedLevel());
+                }});
 
         return levelMap;
     }

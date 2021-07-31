@@ -28,7 +28,7 @@ public class LevelRequest {
 
     private Double expectDifficulty;
 
-    @NotEmpty private String comment;
+    @NotNull private String comment;
 
     @NotNull private LocalDateTime date;
 

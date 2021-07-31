@@ -22,7 +22,7 @@ public class ProgramUpdate {
     @NotNull
     private Program program;
 
-    @NotEmpty private String version;
+    @NotNull @NotEmpty private String version;
 
     @NotNull private String description;
 

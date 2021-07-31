@@ -19,9 +19,9 @@ public class Tag {
     @Column(name = "tag_id")
     private Long id;
 
-    @NotEmpty private String location;
+    @NotNull @NotEmpty private String location;
 
-    @NotEmpty private String name;
+    @NotNull @NotEmpty private String name;
 
     @NotNull
     private Long priority;

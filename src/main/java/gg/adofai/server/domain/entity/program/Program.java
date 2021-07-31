@@ -17,7 +17,7 @@ public class Program {
     @Column(name = "program_id")
     private Long id;
 
-    @NotEmpty private String title;
+    @NotNull @NotEmpty private String title;
 
     @NotNull
     private String simpleDescription;
