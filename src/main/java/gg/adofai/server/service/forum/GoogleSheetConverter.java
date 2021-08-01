@@ -4,7 +4,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,14 @@ public class GoogleSheetConverter {
             result.add((JSONArray) ((JSONObject) o).get("c"));
         }
         return result;
+    }
+
+    public static LocalDateTime toLocalDateTime(String text) {
+        if (!StringUtils.hasText(text)) return null;
+        String[] result = text.substring(5, text.length() - 1).split(",");
+        return LocalDateTime.of(
+                Integer.parseInt(result[0]), Integer.parseInt(result[1]) + 1, Integer.parseInt(result[2]),
+                Integer.parseInt(result[3]), Integer.parseInt(result[4]), Integer.parseInt(result[5]));
     }
 
 }

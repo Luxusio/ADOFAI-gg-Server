@@ -1,5 +1,6 @@
 package gg.adofai.server.service.forum.dto;
 
+import gg.adofai.server.service.forum.GoogleSheetConverter;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,12 +45,7 @@ public class ForumPlayLogDto {
         ForumPlayLogDto dto = new ForumPlayLogDto();
         dto.id = safeLong(safe(jsonArray.get(0)));
         String timeString = safe(jsonArray.get(1));
-        if (timeString != null) {
-            String[] result = timeString.substring(5, timeString.length() - 1).split(",");
-            dto.timeStamp = LocalDateTime.of(
-                    Integer.parseInt(result[0]), Integer.parseInt(result[1]) + 1, Integer.parseInt(result[2]),
-                    Integer.parseInt(result[3]), Integer.parseInt(result[4]), Integer.parseInt(result[5]));
-        }
+        dto.timeStamp = GoogleSheetConverter.toLocalDateTime(timeString);
         dto.name = safe(jsonArray.get(2));
         dto.userCode = safeLong(safe(jsonArray.get(3)));
         dto.mapId = safeLong(safe(jsonArray.get(4)));
